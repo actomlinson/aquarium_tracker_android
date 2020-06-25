@@ -9,8 +9,12 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="menu_home">Previous</string>
-    <string name="menu_gallery">Previous</string>
+    <string name="menu_aquarium">Aquariums</string>
+    <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Previous</string>
+
+    <string name="aquarium_view_overview">Overview</string>
+    <string name="aquarium_view_livestock">Livestock</string>
+    <string name="aquarium_view_plant">Plants</string>
 
 </resources>
