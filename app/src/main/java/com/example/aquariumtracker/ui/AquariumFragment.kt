@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.aquariumtracker.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -18,17 +20,6 @@ import com.google.android.material.tabs.TabLayoutMediator
  */
 class AquariumFragment : Fragment() {
 
-//    private lateinit var tabLayout : TabLayout
-//    private var tabTextTable = listOf(R.string.aquarium_view_overview,
-//                                  R.string.aquarium_view_livestock,
-//                                    R.string.aquarium_view_plant)
-
-//    private var tabTextTable = listOf(getString(R.string.aquarium_view_overview),
-//                                      getString(R.string.aquarium_view_livestock),
-//                                      getString(R.string.aquarium_view_plant))
-//    private var tabIconTable = listOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_wave, null),
-//                                      ResourcesCompat.getDrawable(resources, R.drawable.ic_fish, null),
-//                                      ResourcesCompat.getDrawable(resources, R.drawable.ic_plant, null))
     private var numTabs = 3
 
     override fun onCreateView(
@@ -76,8 +67,21 @@ class AquariumFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
+
 //        view.findViewById<Button>(R.id.button_first).setOnClickListener {
-//            findNavController().navigate(R.id.action_firstFragment_to_secondFragment)
+//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+//        }
+
+        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener {
+            Log.i("fab", "aquarium")
+            findNavController().navigate(R.id.action_nav_aquarium_to_addMeasurement)
+        }
+//        fab.setOnClickListener { view ->
+//            val intent = Intent(view.context, AddMeasurement::class.java).apply {
+//
+//            }
+//            startActivity(intent)
 //        }
     }
 

@@ -1,12 +1,13 @@
 package com.example.aquariumtracker
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -37,16 +38,33 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         val drawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, 0,0)
         drawerToggle.syncState()
+
+        toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_wave, null)
+
+
     }
 
     override fun onBackPressed() {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
+        val drawerToggle = ActionBarDrawerToggle(this, drawer, toolbar, 0,0)
 
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START)
-        } else {
-            drawer.openDrawer(GravityCompat.START)
-        }
+        val fragmentManager = supportFragmentManager
+
+        Log.i("back", toolbar.navigationContentDescription.toString())
+        Log.i("fragments", supportFragmentManager.fragments.toString())
+        super.onBackPressed()
+//        when {
+//            toolbar.navigationContentDescription.toString() == "Navigate up" -> {
+//                super.onBackPressed()
+//            }
+//            drawer.isDrawerOpen(GravityCompat.START) -> {
+//                drawer.closeDrawer(GravityCompat.START)
+//            }
+//            else -> {
+//                drawer.openDrawer(GravityCompat.START)
+//            }
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

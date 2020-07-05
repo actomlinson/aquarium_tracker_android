@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_firstFragment_to_secondFragment"
             app:destination="@id/secondFragment" />
+        <action
+            android:id="@+id/action_nav_aquarium_to_addMeasurement"
+            app:destination="@id/addMeasurement2" />
     </fragment>
     <fragment
         android:id="@+id/secondFragment"
@@ -27,6 +30,15 @@
         tools:layout="@layout/fragment_second" >
         <action
             android:id="@+id/action_secondFragment_to_firstFragment"
+            app:destination="@id/nav_aquarium" />
+    </fragment>
+    <fragment
+        android:id="@+id/addMeasurement2"
+        android:name="com.example.aquariumtracker.AddMeasurement"
+        android:label="fragment_add_measurement"
+        tools:layout="@layout/fragment_add_measurement" >
+        <action
+            android:id="@+id/action_addMeasurement_to_nav_aquarium"
             app:destination="@id/nav_aquarium" />
     </fragment>
 </navigation>
