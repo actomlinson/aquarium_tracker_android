@@ -1,23 +1,70 @@
 package com.example.aquariumtracker
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.res.ResourcesCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
+import com.android.volley.RequestQueue
+import com.google.android.material.navigation.NavigationView
+
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var volleyRequestQueue: RequestQueue
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(findViewById(R.id.toolbar))
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+        val navController = findNavController(R.id.nav_host_fragment)
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+        // having the set instead of navController.graph sets every page in the
+        // set as a 'home' meaning no back buttons.
+        val appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.nav_aquarium, R.id.nav_gallery), drawerLayout)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+
+        navView.setupWithNavController(navController)
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+        setSupportActionBar(toolbar)
+        val drawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, 0,0)
+        drawerToggle.syncState()
+
+        toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_wave, null)
+
+
+    }
+
+    override fun onBackPressed() {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
+        val drawerToggle = ActionBarDrawerToggle(this, drawer, toolbar, 0,0)
+
+        val fragmentManager = supportFragmentManager
+
+        Log.i("back", toolbar.navigationContentDescription.toString())
+        Log.i("fragments", supportFragmentManager.fragments.toString())
+        super.onBackPressed()
+//        when {
+//            toolbar.navigationContentDescription.toString() == "Navigate up" -> {
+//                super.onBackPressed()
+//            }
+//            drawer.isDrawerOpen(GravityCompat.START) -> {
+//                drawer.closeDrawer(GravityCompat.START)
+//            }
+//            else -> {
+//                drawer.openDrawer(GravityCompat.START)
+//            }
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -34,5 +81,9 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    public fun getVolleyQueue(): RequestQueue {
+        return volleyRequestQueue
     }
 }
