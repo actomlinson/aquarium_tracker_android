@@ -2,9 +2,7 @@ package com.example.aquariumtracker.ui
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -20,7 +18,7 @@ import com.google.android.material.tabs.TabLayoutMediator
  */
 class AquariumFragment : Fragment() {
 
-    private var numTabs = 3
+    private val numTabs : Int = 5
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -32,9 +30,12 @@ class AquariumFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+
+        Log.i("aquarium fragment", "")
 
         val viewPager = view.findViewById<ViewPager2>(R.id.pager)
-        val demoCollectionAdapter = DemoCollectionAdapter(this)
+        val demoCollectionAdapter = DemoCollectionAdapter(this, numTabs)
         viewPager.adapter = demoCollectionAdapter
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tabs_aquarium)
@@ -44,21 +45,24 @@ class AquariumFragment : Fragment() {
         }.attach()
 
         val tabTextTable = listOf(getString(R.string.aquarium_view_overview),
+                                  getString(R.string.menu_gallery),
+                                  getString(R.string.aquarium_view_params),
                                   getString(R.string.aquarium_view_livestock),
                                   getString(R.string.aquarium_view_plant))
 
         val tabIconTable = listOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_wave, null),
+                                  ResourcesCompat.getDrawable(resources, R.drawable.ic_camera, null),
+                                  ResourcesCompat.getDrawable(resources, R.drawable.ic_chart, null),
                                   ResourcesCompat.getDrawable(resources, R.drawable.ic_fish, null),
                                   ResourcesCompat.getDrawable(resources, R.drawable.ic_plant, null))
 
-        tabLayout.getTabAt(0)?.text = getString(R.string.aquarium_view_overview)
+        tabLayout.getTabAt(0)?.text = tabTextTable[0]
         for (x in 0 until numTabs) {
             tabLayout.getTabAt(x)?.icon = tabIconTable[x]
         }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                Log.i("tab listener", tab.text.toString())
                 tab.text = tabTextTable[tabLayout.selectedTabPosition]
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {
@@ -67,32 +71,56 @@ class AquariumFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-
-//        view.findViewById<Button>(R.id.button_first).setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-//        }
-
         val fab = view.findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             Log.i("fab", "aquarium")
-            findNavController().navigate(R.id.action_nav_aquarium_to_addMeasurement)
+            findNavController().navigate(R.id.action_aquariumFragment_to_addMeasurement)
         }
-//        fab.setOnClickListener { view ->
-//            val intent = Intent(view.context, AddMeasurement::class.java).apply {
-//
-//            }
-//            startActivity(intent)
-//        }
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_add, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_add -> {
+                val tabLayout = view?.findViewById<TabLayout>(R.id.tabs_aquarium)
+                val navController = findNavController()
+                Log.i("tablayout", (tabLayout?.selectedTabPosition == 0).toString())
+
+                when (tabLayout?.selectedTabPosition) {
+                    0 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
+                    1 -> Log.i("tab 1", "")
+                    2 -> Log.i("tab 2", "")
+                    3 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
+                    else -> super.onOptionsItemSelected(item)
+                }
+                Log.i("tablayout2", tabLayout?.selectedTabPosition.toString())
+
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
 }
 
-class DemoCollectionAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAdapter(fragment) {
 
-    override fun getItemCount(): Int = 3
+    private var n: Int = numTabs
+
+    override fun getItemCount(): Int = n
 
     override fun createFragment(position: Int): Fragment {
         // Return a NEW fragment instance in createFragment(int)

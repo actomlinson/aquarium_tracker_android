@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -30,18 +29,15 @@ class MainActivity : AppCompatActivity() {
         // having the set instead of navController.graph sets every page in the
         // set as a 'home' meaning no back buttons.
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.nav_aquarium, R.id.nav_gallery), drawerLayout)
+            R.id.nav_aquarium_list, R.id.nav_gallery), drawerLayout)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
         navView.setupWithNavController(navController)
         toolbar.setupWithNavController(navController, appBarConfiguration)
         setSupportActionBar(toolbar)
+
         val drawerToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, 0,0)
         drawerToggle.syncState()
-
-        toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_wave, null)
-
-
     }
 
     override fun onBackPressed() {
@@ -50,7 +46,6 @@ class MainActivity : AppCompatActivity() {
         val drawerToggle = ActionBarDrawerToggle(this, drawer, toolbar, 0,0)
 
         val fragmentManager = supportFragmentManager
-
         Log.i("back", toolbar.navigationContentDescription.toString())
         Log.i("fragments", supportFragmentManager.fragments.toString())
         super.onBackPressed()
@@ -83,7 +78,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    public fun getVolleyQueue(): RequestQueue {
-        return volleyRequestQueue
-    }
 }

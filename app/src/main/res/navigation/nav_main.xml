@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/nav_aquarium">
+    app:startDestination="@id/nav_aquarium_list">
 
     <fragment
         android:id="@+id/nav_gallery"
@@ -12,16 +12,15 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_aquarium"
-        android:name="com.example.aquariumtracker.ui.AquariumFragment"
-        android:label="fragment_aquarium"
-        tools:layout="@layout/fragment_aquarium" >
+        android:id="@+id/nav_aquarium_list"
+        android:name="com.example.aquariumtracker.ui.AquariumList"
+        android:label="fragment_aquarium_list">
         <action
             android:id="@+id/action_firstFragment_to_secondFragment"
             app:destination="@id/secondFragment" />
         <action
-            android:id="@+id/action_nav_aquarium_to_addMeasurement"
-            app:destination="@id/addMeasurement2" />
+            android:id="@+id/action_nav_aquarium_list_to_aquariumFragment"
+            app:destination="@id/aquariumFragment" />
     </fragment>
     <fragment
         android:id="@+id/secondFragment"
@@ -30,15 +29,32 @@
         tools:layout="@layout/fragment_second" >
         <action
             android:id="@+id/action_secondFragment_to_firstFragment"
-            app:destination="@id/nav_aquarium" />
+            app:destination="@id/nav_aquarium_list" />
     </fragment>
     <fragment
-        android:id="@+id/addMeasurement2"
+        android:id="@+id/addMeasurement"
         android:name="com.example.aquariumtracker.AddMeasurement"
         android:label="fragment_add_measurement"
         tools:layout="@layout/fragment_add_measurement" >
         <action
-            android:id="@+id/action_addMeasurement_to_nav_aquarium"
-            app:destination="@id/nav_aquarium" />
+            android:id="@+id/action_addMeasurement_to_aquariumFragment"
+            app:destination="@id/aquariumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aquariumFragment"
+        android:name="com.example.aquariumtracker.ui.AquariumFragment"
+        android:label="{aq_name}"
+        tools:layout="@layout/fragment_aquarium" >
+        <argument
+            android:name="aq_num"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+        <action
+            android:id="@+id/action_aquariumFragment_to_addMeasurement"
+            app:destination="@id/addMeasurement" />
+        <action
+            android:id="@+id/action_aquariumFragment_to_nav_aquarium_list"
+            app:destination="@id/nav_aquarium_list" />
     </fragment>
 </navigation>
