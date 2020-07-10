@@ -34,6 +34,7 @@ class AddMeasurement : Fragment() {
         val drawerLayout = this.activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
         val drawerToggle = ActionBarDrawerToggle(this.activity, drawerLayout, toolbar, 0,0)
         drawerToggle.syncState()
+        Log.i("addmeasurement", "")
     }
 
     private fun sendPH(view: View) {

@@ -5,20 +5,20 @@ import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.example.aquariumtracker.AquariumViewModel
 import com.example.aquariumtracker.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class AquariumFragment : Fragment() {
 
     private val numTabs : Int = 5
+    private val viewModel: AquariumViewModel by viewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +31,8 @@ class AquariumFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+
+        val aq_num = arguments?.getInt("aq_num")
 
         Log.i("aquarium fragment", "")
 
@@ -124,8 +126,11 @@ class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAda
 
     override fun createFragment(position: Int): Fragment {
         // Return a NEW fragment instance in createFragment(int)
-        val fragment = AquariumOverviewFragment()
 
-        return fragment
+        return when (position) {
+            2 -> ParameterList()
+            else -> AquariumOverviewFragment()
+        }
+
     }
 }
