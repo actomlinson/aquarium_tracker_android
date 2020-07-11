@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -38,9 +39,7 @@ class AquariumList : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
-
+        
         val recyclerView = view.findViewById<RecyclerView>(R.id.aq_list)
         val viewAdapter = AqListAdapter(view.context.applicationContext)
         recyclerView.adapter = viewAdapter
@@ -50,9 +49,6 @@ class AquariumList : Fragment() {
         viewModel.allAquariums.observe(viewLifecycleOwner, Observer { aqs ->
             aqs?.let {viewAdapter.setAquariums(it)}
         })
-
-
-
 
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         fab.setOnClickListener {
@@ -134,7 +130,9 @@ class AqListAdapter internal constructor(
     private var aquariums = emptyList<Aquarium>()
 
     inner class AquariumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val aqItemView: TextView = itemView.findViewById(R.id.textView)
+        val aqCard: CardView = itemView.findViewById(R.id.aq_list_card)
+        val aqNameTextView: TextView = itemView.findViewById(R.id.aq_name)
+        val aqNumTextView: TextView = itemView.findViewById(R.id.aq_num)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AquariumViewHolder {
@@ -144,14 +142,12 @@ class AqListAdapter internal constructor(
 
     override fun onBindViewHolder(holder: AquariumViewHolder, position: Int) {
         val current = aquariums[position]
-        holder.aqItemView.text = current.nickname
-        holder.aqItemView.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        holder.aqItemView.setOnClickListener {
-
+        holder.aqNameTextView.text = current.nickname
+        holder.aqNumTextView.text = current.id.toString()
+        holder.aqCard.setOnClickListener {
             val navController = it.findNavController()
             navController.navigate(R.id.action_nav_aquarium_list_to_aquariumFragment, bundleOf("aq_num" to position, "aq_name" to current.nickname))
             Log.i("in adapter", position.toString())
-
         }
     }
 
