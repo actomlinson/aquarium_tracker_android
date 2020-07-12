@@ -10,8 +10,8 @@ import com.example.aquariumtracker.database.models.Aquarium
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = arrayOf(Aquarium::class), version = 1, exportSchema = false)
-public abstract class AquariumRoomDatabase : RoomDatabase() {
+@Database(entities = [Aquarium::class], version = 1, exportSchema = false)
+public abstract class AquariumDatabase : RoomDatabase() {
 
     abstract fun aquariumDao(): AquariumDAO
 
@@ -22,25 +22,34 @@ public abstract class AquariumRoomDatabase : RoomDatabase() {
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
             INSTANCE?.let {
-                database -> scope.launch {
-                    populateDatabase(database.aquariumDao())
+                    database -> scope.launch {
+                        database.aquariumDao().insert(Aquarium(2, "Another", 5.toDouble()))
+                }
+            }
+        }
+
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            INSTANCE?.let {
+                    database -> scope.launch {
+                        populateDatabase(database.aquariumDao())
                 }
             }
         }
 
         suspend fun populateDatabase(aqDAO: AquariumDAO) {
             aqDAO.deleteAll()
-            var aq = Aquarium(0,"Marineland 5 Gallon Portrait")
+            var aq = Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble())
             aqDAO.insert(aq)
-            aqDAO.insert(Aquarium(1, "Betta Tank"))
+            aqDAO.insert(Aquarium(1, "Betta Tank", 5.toDouble()))
         }
     }
 
     companion object {
         @Volatile
-        private var INSTANCE: AquariumRoomDatabase? = null
+        private var INSTANCE: AquariumDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): AquariumRoomDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope): AquariumDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
@@ -48,7 +57,7 @@ public abstract class AquariumRoomDatabase : RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                         context.applicationContext,
-                        AquariumRoomDatabase::class.java,
+                        AquariumDatabase::class.java,
                         "aquarium_database"
                 ).addCallback(AqauriumDatabaseCallback(scope)).build()
                 INSTANCE = instance

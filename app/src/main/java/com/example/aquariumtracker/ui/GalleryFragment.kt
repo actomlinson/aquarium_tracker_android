@@ -14,7 +14,7 @@ class GalleryFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_gallery, container, false)
+        return inflater.inflate(R.layout.view_aquarium_card, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

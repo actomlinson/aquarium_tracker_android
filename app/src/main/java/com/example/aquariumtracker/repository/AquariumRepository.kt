@@ -8,6 +8,8 @@ class AquariumRepository(private val aquariumDAO: AquariumDAO) {
 
     val allAquariums: LiveData<List<Aquarium>> = aquariumDAO.getAquariumList()
 
+    fun getAquarium(aqID: Int) = aquariumDAO.getAquarium(aqID)
+
     suspend fun insert(aq: Aquarium) {
         aquariumDAO.insert(aq)
     }

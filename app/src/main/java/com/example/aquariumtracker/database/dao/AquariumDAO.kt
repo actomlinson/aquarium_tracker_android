@@ -9,7 +9,11 @@ import com.example.aquariumtracker.database.models.Aquarium
 
 @Dao
 interface AquariumDAO {
-    @Query("SELECT * from aquarium_table ORDER BY id ASC")
+
+    @Query("SELECT * from aquarium_table WHERE aq_id = :aqID")
+    fun getAquarium(aqID: Int): LiveData<Aquarium>
+
+    @Query("SELECT * from aquarium_table ORDER BY aq_id ASC")
     fun getAquariumList(): LiveData<List<Aquarium>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

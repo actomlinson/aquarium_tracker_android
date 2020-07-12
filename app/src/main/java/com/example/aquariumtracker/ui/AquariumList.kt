@@ -24,6 +24,7 @@ import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.models.Aquarium
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONObject
+import java.util.*
 
 
 class AquariumList : Fragment() {
@@ -133,17 +134,22 @@ class AqListAdapter internal constructor(
         val aqCard: CardView = itemView.findViewById(R.id.aq_list_card)
         val aqNameTextView: TextView = itemView.findViewById(R.id.aq_name)
         val aqNumTextView: TextView = itemView.findViewById(R.id.aq_num)
+        val aqDateTextView: TextView = itemView.findViewById(R.id.aq_date)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AquariumViewHolder {
-        val itemView = inflater.inflate(R.layout.fragment_gallery, parent, false)
+        val itemView = inflater.inflate(R.layout.view_aquarium_card, parent, false)
         return AquariumViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: AquariumViewHolder, position: Int) {
         val current = aquariums[position]
         holder.aqNameTextView.text = current.nickname
-        holder.aqNumTextView.text = current.id.toString()
+        holder.aqNumTextView.text = current.aq_id.toString()
+        val date = Calendar.getInstance().apply { timeInMillis = current.startDate }
+
+        holder.aqDateTextView.text = date.time.toString()
         holder.aqCard.setOnClickListener {
             val navController = it.findNavController()
             navController.navigate(R.id.action_nav_aquarium_list_to_aquariumFragment, bundleOf("aq_num" to position, "aq_name" to current.nickname))
@@ -178,7 +184,7 @@ class AquariumListAdapter(private val myDataset: Array<String>) :
         // create a new view
         val textView = LayoutInflater.from(parent.context)
             .inflate(
-                R.layout.fragment_gallery,
+                R.layout.view_aquarium_card,
                 parent,
                 false
             ) as TextView
