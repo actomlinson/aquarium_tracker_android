@@ -21,7 +21,7 @@ import com.android.volley.toolbox.StringRequest
 import com.example.aquariumtracker.AquariumViewModel
 import com.example.aquariumtracker.HTTPRequestQueue
 import com.example.aquariumtracker.R
-import com.example.aquariumtracker.database.models.Aquarium
+import com.example.aquariumtracker.database.model.Aquarium
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONObject
 import java.util.*

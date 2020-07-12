@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.aquariumtracker.database.AquariumDatabase
-import com.example.aquariumtracker.database.models.Aquarium
+import com.example.aquariumtracker.database.model.Aquarium
 import com.example.aquariumtracker.repository.AquariumRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

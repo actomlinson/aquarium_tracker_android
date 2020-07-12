@@ -25,7 +25,7 @@ class AquariumFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_aquarium, container, false)
+        return inflater.inflate(R.layout.fragment_aquarium_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -128,8 +128,8 @@ class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAda
         // Return a NEW fragment instance in createFragment(int)
 
         return when (position) {
-            2 -> ParameterList()
-            else -> AquariumOverviewFragment()
+            2 -> AquariumOverviewFragment()
+            else -> ParameterList()
         }
 
     }

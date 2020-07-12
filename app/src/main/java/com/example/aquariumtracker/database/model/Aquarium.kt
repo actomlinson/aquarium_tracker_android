@@ -1,4 +1,4 @@
-package com.example.aquariumtracker.database.models
+package com.example.aquariumtracker.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

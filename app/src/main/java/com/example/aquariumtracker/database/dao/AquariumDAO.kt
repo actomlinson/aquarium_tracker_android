@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.aquariumtracker.database.models.Aquarium
+import com.example.aquariumtracker.database.model.Aquarium
 
 @Dao
 interface AquariumDAO {
