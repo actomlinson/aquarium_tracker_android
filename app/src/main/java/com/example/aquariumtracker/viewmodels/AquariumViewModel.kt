@@ -1,10 +1,10 @@
-package com.example.aquariumtracker
+package com.example.aquariumtracker.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.example.aquariumtracker.database.AquariumDatabase
+import com.example.aquariumtracker.database.AppDatabase
 import com.example.aquariumtracker.database.model.Aquarium
 import com.example.aquariumtracker.repository.AquariumRepository
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ class AquariumViewModel(application: Application) : AndroidViewModel(application
     val allAquariums: LiveData<List<Aquarium>>
 
     init {
-        val aquariumDAO = AquariumDatabase.getDatabase(application, viewModelScope).aquariumDao()
+        val aquariumDAO = AppDatabase.getDatabase(application, viewModelScope).aquariumDao()
         repository = AquariumRepository(aquariumDAO)
         allAquariums = repository.allAquariums
     }

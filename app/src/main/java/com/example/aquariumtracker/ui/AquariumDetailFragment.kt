@@ -4,21 +4,21 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.example.aquariumtracker.AquariumViewModel
 import com.example.aquariumtracker.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlin.properties.Delegates
 
 class AquariumFragment : Fragment() {
 
     private val numTabs : Int = 5
-    private val viewModel: AquariumViewModel by viewModels()
+    private var aq_ID by Delegates.notNull<Int>()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +32,7 @@ class AquariumFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        val aq_num = arguments?.getInt("aq_num")
+        aq_ID = arguments?.getInt("aq_num") ?: 0
 
         Log.i("aquarium fragment", "")
 
@@ -98,16 +98,14 @@ class AquariumFragment : Fragment() {
             R.id.action_add -> {
                 val tabLayout = view?.findViewById<TabLayout>(R.id.tabs_aquarium)
                 val navController = findNavController()
-                Log.i("tablayout", (tabLayout?.selectedTabPosition == 0).toString())
 
                 when (tabLayout?.selectedTabPosition) {
-                    0 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
+                    0 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement, bundleOf("aq_ID" to aq_ID))
                     1 -> Log.i("tab 1", "")
                     2 -> Log.i("tab 2", "")
                     3 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     else -> super.onOptionsItemSelected(item)
                 }
-                Log.i("tablayout2", tabLayout?.selectedTabPosition.toString())
 
                 return true
             }

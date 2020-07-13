@@ -9,7 +9,7 @@
         android:id="@+id/nav_gallery"
         android:name="com.example.aquariumtracker.ui.GalleryFragment"
         android:label="fragment_gallery"
-        tools:layout="@layout/view_aquarium_card" />
+        tools:layout="@layout/recycle_aquarium_card" />
 
     <fragment
         android:id="@+id/nav_aquarium_list"

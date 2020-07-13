@@ -2,7 +2,6 @@ package com.example.aquariumtracker.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,21 +14,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.example.aquariumtracker.AquariumViewModel
-import com.example.aquariumtracker.HTTPRequestQueue
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Aquarium
+import com.example.aquariumtracker.viewmodels.AquariumViewModel
+import com.example.aquariumtracker.viewmodels.ParameterViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONObject
 import java.util.*
 
 
 class AquariumList : Fragment() {
 
-    private lateinit var viewModel: AquariumViewModel
+    private lateinit var aqViewModel: AquariumViewModel
+    private lateinit var paramViewModel: ParameterViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,90 +38,54 @@ class AquariumList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         
         val recyclerView = view.findViewById<RecyclerView>(R.id.aq_list)
-        val viewAdapter = AqListAdapter(view.context.applicationContext)
+        val viewAdapter = AquariumListAdapter(view.context.applicationContext)
         recyclerView.adapter = viewAdapter
         recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
 
-        viewModel = ViewModelProvider(this).get(AquariumViewModel::class.java)
-        viewModel.allAquariums.observe(viewLifecycleOwner, Observer { aqs ->
+        aqViewModel = ViewModelProvider(this).get(AquariumViewModel::class.java)
+        aqViewModel.allAquariums.observe(viewLifecycleOwner, Observer { aqs ->
             aqs?.let {viewAdapter.setAquariums(it)}
         })
 
+        paramViewModel = ViewModelProvider(this).get(ParameterViewModel::class.java)
+
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         fab.setOnClickListener {
-
+            for (c in 0 until recyclerView.childCount) {
+                var holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(c))
+                var tv = holder.itemView.findViewById<TextView>(R.id.aq_num)
+//                Log.i("list", c.toString() +  tv.text)
+                paramViewModel.createDefaultParametersForAquarium(c)
+            }
         }
 
-
-//        viewModel.aqNames.observe(viewLifecycleOwner, Observer<Array<String>> { names ->
-//            val viewManager = LinearLayoutManager(view.context)
-//            val viewAdapter = AqListAdapter(this)
 //
-//            recyclerView.apply {
-//                // use this setting to improve performance if you know that changes
-//                // in content do not change the layout size of the RecyclerView
-//                setHasFixedSize(true)
+//        val queue = HTTPRequestQueue.getInstance(view.context.applicationContext).requestQueue
 //
-//                // use a linear layout manager
-//                layoutManager = viewManager
+//        val stringRequest = StringRequest(
+//            Request.Method.GET,
+//            HTTPRequestQueue.getInstance(view.context.applicationContext).url.plus("aquariums/"),
+//            Response.Listener<String> { response ->
+//                val jsonResponse = JSONObject(response)
+//                val resultsArray = jsonResponse.getJSONArray("results")
+//                val numAquariums = jsonResponse.getInt("count")
+//                val aquariumNames = Array(numAquariums) { i -> resultsArray.getJSONObject(i).get("nickname").toString() }
+//            },
+//            Response.ErrorListener { error ->
+//                Log.e("error listener", error.toString())
+//            })
 //
-//                // specify an viewAdapter (see also next example)
-//                adapter = viewAdapter
+//        queue.add(stringRequest)
 //
-//
-//                Log.i("viewmodel", names.toString())
-//            }
-//        })
+//        Log.i("recycle view objects", recyclerView.toString())
 
-
-
-//        repo.getAquariumNameList()
-//        var names = repo.data.value ?: Array(0) { i -> i.toString()}
-//
-
-
-        val queue = HTTPRequestQueue.getInstance(view.context.applicationContext).requestQueue
-
-        val stringRequest = StringRequest(
-            Request.Method.GET,
-            HTTPRequestQueue.getInstance(view.context.applicationContext).url.plus("aquariums/"),
-            Response.Listener<String> { response ->
-                val jsonResponse = JSONObject(response)
-                val resultsArray = jsonResponse.getJSONArray("results")
-                val numAquariums = jsonResponse.getInt("count")
-                val aquariumNames = Array(numAquariums) { i -> resultsArray.getJSONObject(i).get("nickname").toString() }
-//                val viewManager = LinearLayoutManager(view.context)
-//                val viewAdapter = AquariumListAdapter(aquariumNames)
-//
-//                recyclerView.apply {
-//                    // use this setting to improve performance if you know that changes
-//                    // in content do not change the layout size of the RecyclerView
-//                    setHasFixedSize(true)
-//
-//                    // use a linear layout manager
-//                    layoutManager = viewManager
-//
-//                    // specify an viewAdapter (see also next example)
-//                    adapter = viewAdapter
-//
-//                }
-            },
-            Response.ErrorListener { error ->
-                Log.e("error listener", error.toString())
-            })
-
-        queue.add(stringRequest)
-
-
-        Log.i("recycle view objects", recyclerView.toString())
-
-        }
     }
+}
 
 
-class AqListAdapter internal constructor(
+class AquariumListAdapter internal constructor(
     context: Context
-) : RecyclerView.Adapter<AqListAdapter.AquariumViewHolder>() {
+) : RecyclerView.Adapter<AquariumListAdapter.AquariumViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var aquariums = emptyList<Aquarium>()
@@ -135,11 +95,10 @@ class AqListAdapter internal constructor(
         val aqNameTextView: TextView = itemView.findViewById(R.id.aq_name)
         val aqNumTextView: TextView = itemView.findViewById(R.id.aq_num)
         val aqDateTextView: TextView = itemView.findViewById(R.id.aq_date)
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AquariumViewHolder {
-        val itemView = inflater.inflate(R.layout.view_aquarium_card, parent, false)
+        val itemView = inflater.inflate(R.layout.recycle_aquarium_card, parent, false)
         return AquariumViewHolder(itemView)
     }
 
@@ -152,8 +111,9 @@ class AqListAdapter internal constructor(
         holder.aqDateTextView.text = date.time.toString()
         holder.aqCard.setOnClickListener {
             val navController = it.findNavController()
-            navController.navigate(R.id.action_nav_aquarium_list_to_aquariumFragment, bundleOf("aq_num" to position, "aq_name" to current.nickname))
-            Log.i("in adapter", position.toString())
+            navController.navigate(R.id.action_nav_aquarium_list_to_aquariumFragment,
+                bundleOf("aq_num" to position, "aq_name" to current.nickname)
+            )
         }
     }
 
@@ -167,47 +127,3 @@ class AqListAdapter internal constructor(
     }
 }
 
-
-
-class AquariumListAdapter(private val myDataset: Array<String>) :
-    RecyclerView.Adapter<AquariumListAdapter.MyViewHolder>() {
-
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder.
-    // Each data item is just a string in this case that is shown in a TextView.
-    class MyViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
-
-    // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): AquariumListAdapter.MyViewHolder {
-        // create a new view
-        val textView = LayoutInflater.from(parent.context)
-            .inflate(
-                R.layout.view_aquarium_card,
-                parent,
-                false
-            ) as TextView
-        // set the view's size, margins, paddings and layout parameters
-        return MyViewHolder(textView)
-    }
-
-    // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-
-        holder.textView.text = myDataset[position]
-        holder.textView.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-        holder.textView.setOnClickListener {
-
-            val navController = it.findNavController()
-            navController.navigate(R.id.action_nav_aquarium_list_to_aquariumFragment, bundleOf("aq_num" to position, "aq_name" to myDataset[position]))
-            Log.i("in adapter", position.toString())
-
-        }
-    }
-
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = myDataset.size
-}

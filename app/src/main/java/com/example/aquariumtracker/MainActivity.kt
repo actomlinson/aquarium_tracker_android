@@ -1,7 +1,6 @@
 package com.example.aquariumtracker
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -43,8 +42,6 @@ class MainActivity : AppCompatActivity() {
         val drawerToggle = ActionBarDrawerToggle(this, drawer, toolbar, 0,0)
 
         val fragmentManager = supportFragmentManager
-        Log.i("back", toolbar.navigationContentDescription.toString())
-        Log.i("fragments", supportFragmentManager.fragments.toString())
         super.onBackPressed()
 //        when {
 //            toolbar.navigationContentDescription.toString() == "Navigate up" -> {

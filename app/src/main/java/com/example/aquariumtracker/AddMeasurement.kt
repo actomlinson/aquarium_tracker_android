@@ -1,17 +1,21 @@
 package com.example.aquariumtracker
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import org.json.JSONObject
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.aquariumtracker.database.model.Parameter
+import com.example.aquariumtracker.viewmodels.ParameterViewModel
+import kotlin.properties.Delegates
 
 class AddMeasurement : Fragment() {
 
@@ -24,38 +28,55 @@ class AddMeasurement : Fragment() {
         return inflater.inflate(R.layout.fragment_add_measurement, container, false)
     }
 
+    private lateinit var paramViewModel: ParameterViewModel
+    private var aq_ID by Delegates.notNull<Int>()
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
+        aq_ID = arguments?.getInt("aq_ID") ?: 0
+        Log.i("aquarium ID", aq_ID.toString())
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.param_list)
+        val viewAdapter = ParameterListAdapter(view.context.applicationContext)
+        recyclerView.adapter = viewAdapter
+        recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
+
+        paramViewModel = ViewModelProvider(this).get(ParameterViewModel::class.java)
+        paramViewModel.aq0Params.observe(viewLifecycleOwner, Observer { params ->
+            params?.let {
+                viewAdapter.setParameters(it)
+            }
+        })
 
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
 
         val drawerLayout = this.activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
         val drawerToggle = ActionBarDrawerToggle(this.activity, drawerLayout, toolbar, 0,0)
         drawerToggle.syncState()
-        Log.i("addmeasurement", "")
     }
 
     private fun sendPH(view: View) {
-        val measurement = view.findViewById<EditText>(R.id.input_ph)
-        val queue = HTTPRequestQueue.getInstance(view.context.applicationContext).requestQueue
-        //val textView = view.findViewById<TextView>(R.id.label_ph)
-
-        val jsonRequest = JSONObject()
-        jsonRequest.put("aquarium", "http://192.168.1.17:8080/api/aquariums/1/")
-        jsonRequest.put("measurement", measurement.text.toString())
-        val jsonObjectRequest = JsonObjectRequest(Request.Method.POST,
-            HTTPRequestQueue.getInstance(view.context.applicationContext).url.plus("phmeasurements/"),
-            jsonRequest,
-            Response.Listener { response ->
-                //textView.text = "Response: %s".format(response.toString())
-            },
-            Response.ErrorListener { error ->
-                Log.i("volley error", jsonRequest.toString())
-            }
-        )
-
+//        val measurement = view.findViewById<EditText>(R.id.input_ph)
+//        val queue = HTTPRequestQueue.getInstance(view.context.applicationContext).requestQueue
+//        //val textView = view.findViewById<TextView>(R.id.label_ph)
+//
+//        val jsonRequest = JSONObject()
+//        jsonRequest.put("aquarium", "http://192.168.1.17:8080/api/aquariums/1/")
+//        jsonRequest.put("measurement", measurement.text.toString())
+//        val jsonObjectRequest = JsonObjectRequest(Request.Method.POST,
+//            HTTPRequestQueue.getInstance(view.context.applicationContext).url.plus("phmeasurements/"),
+//            jsonRequest,
+//            Response.Listener { response ->
+//                //textView.text = "Response: %s".format(response.toString())
+//            },
+//            Response.ErrorListener { error ->
+//                Log.i("volley error", jsonRequest.toString())
+//            }
+//        )
+//
 
 
 //        val stringRequest = StringRequest(
@@ -70,7 +91,7 @@ class AddMeasurement : Fragment() {
 //                textView.text = error.toString() //"That didn't work!"
 //                Log.i("error listener", error.toString())
 //            })
-        queue.add(jsonObjectRequest)
+//        queue.add(jsonObjectRequest)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -91,4 +112,37 @@ class AddMeasurement : Fragment() {
         }
     }
 
+}
+
+class ParameterListAdapter internal constructor(
+    context: Context
+) : RecyclerView.Adapter<ParameterListAdapter.ParameterViewHolder>() {
+
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
+    private var parameters = emptyList<Parameter>()
+
+    inner class ParameterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val unitsTextView: TextView = itemView.findViewById(R.id.units)
+        val paramNameTextView: TextView = itemView.findViewById(R.id.param_name)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParameterViewHolder {
+        val itemView = inflater.inflate(R.layout.recycle_parameter_add, parent, false)
+        return ParameterViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: ParameterViewHolder, position: Int) {
+        val current = parameters[position]
+        holder.unitsTextView.text = current.param_id.toString()
+        holder.paramNameTextView.text = current.name
+    }
+
+    internal fun setParameters(params: List<Parameter>) {
+        this.parameters = params
+        notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int {
+        return parameters.size
+    }
 }
