@@ -58,7 +58,16 @@ class AddMeasurement : Fragment() {
         drawerToggle.syncState()
     }
 
-    private fun sendPH(view: View) {
+    private fun saveMeasurements(view: View) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.param_list)
+        for (c in 0 until recyclerView.childCount) {
+                var holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(c))
+                var tv = holder.itemView.findViewById<TextView>(R.id.units)
+                Log.i("AddMeasurement", c.toString() +  tv.text)
+            }
+
+
+
 //        val measurement = view.findViewById<EditText>(R.id.input_ph)
 //        val queue = HTTPRequestQueue.getInstance(view.context.applicationContext).requestQueue
 //        //val textView = view.findViewById<TextView>(R.id.label_ph)
@@ -105,7 +114,7 @@ class AddMeasurement : Fragment() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_save -> {
-                this.view?.let { sendPH(it) }
+                this.view?.let { saveMeasurements(it) }
                 return true
             }
             else -> super.onOptionsItemSelected(item)

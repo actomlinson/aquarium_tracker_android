@@ -15,13 +15,11 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
     private val repository: ParameterRepository
 
     val allParams: LiveData<List<Parameter>>
-    val aq0Params: LiveData<List<Parameter>>
 
     init {
         val parameterDAO = AppDatabase.getDatabase(application, viewModelScope).parameterDao()
         repository = ParameterRepository(parameterDAO)
         allParams = repository.allParams
-        aq0Params = repository.aq0Params
     }
 
     fun createDefaultParametersForAquarium(aqID: Int) {

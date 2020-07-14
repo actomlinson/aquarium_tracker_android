@@ -54,12 +54,7 @@ class AquariumList : Fragment() {
 
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         fab.setOnClickListener {
-//            for (c in 0 until recyclerView.childCount) {
-//                var holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(c))
-//                var tv = holder.itemView.findViewById<TextView>(R.id.aq_num)
-////                Log.i("list", c.toString() +  tv.text)
-//                paramViewModel.createDefaultParametersForAquarium(c)
-//            }
+
         }
 
 //

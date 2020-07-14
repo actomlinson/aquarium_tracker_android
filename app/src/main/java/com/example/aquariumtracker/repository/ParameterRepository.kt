@@ -20,5 +20,4 @@ class ParameterRepository(private val parameterDAO: ParameterDAO) {
         parameterDAO.insertAll(params)
     }
 
-
 }

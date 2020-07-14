@@ -6,17 +6,20 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.aquariumtracker.database.dao.AquariumDAO
+import com.example.aquariumtracker.database.dao.MeasurementDAO
 import com.example.aquariumtracker.database.dao.ParameterDAO
 import com.example.aquariumtracker.database.model.Aquarium
+import com.example.aquariumtracker.database.model.Measurement
 import com.example.aquariumtracker.database.model.Parameter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Aquarium::class, Parameter::class], version = 1, exportSchema = false)
+@Database(entities = [Aquarium::class, Parameter::class, Measurement::class], version = 1, exportSchema = false)
 public abstract class AppDatabase : RoomDatabase() {
 
     abstract fun aquariumDao(): AquariumDAO
     abstract fun parameterDao(): ParameterDAO
+    abstract fun measurementDao(): MeasurementDAO
 
     private class AppDatabaseCallback(
         private val scope: CoroutineScope
@@ -34,8 +37,7 @@ public abstract class AppDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(aqDAO: AquariumDAO, parameterDAO: ParameterDAO) {
             aqDAO.deleteAll()
-            var aq = Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble())
-            aqDAO.insert(aq)
+            aqDAO.insert(Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble()))
             createDefaultParametersForAquarium(0, parameterDAO)
             aqDAO.insert(Aquarium(1, "Betta Tank", 5.toDouble()))
             createDefaultParametersForAquarium(1, parameterDAO)
