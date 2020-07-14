@@ -126,8 +126,8 @@ class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAda
         // Return a NEW fragment instance in createFragment(int)
 
         return when (position) {
-            2 -> AquariumOverviewFragment()
-            else -> ParameterList()
+            2 -> ParameterList()
+            else -> AquariumOverviewFragment()
         }
 
     }

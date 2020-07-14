@@ -10,10 +10,10 @@ import com.example.aquariumtracker.database.model.Measurement
 @Dao
 interface MeasurementDAO {
 
-    @Query("SELECT * from measurement_table  WHERE param_id = :pID ORDER BY time ASC")
+    @Query("SELECT * from measurement_table WHERE param_id = :pID ORDER BY time ASC")
     fun getAllMeasurementsForParameter(pID: Int): LiveData<List<Measurement>>
 
-    @Query("SELECT :n from measurement_table  WHERE param_id = :pID ORDER BY time ASC")
+    @Query("SELECT * from measurement_table WHERE param_id = :pID ORDER BY time ASC LIMIT :n")
     fun getMostRecentMeasurementsForParameter(n: Int, pID: Int): LiveData<List<Measurement>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

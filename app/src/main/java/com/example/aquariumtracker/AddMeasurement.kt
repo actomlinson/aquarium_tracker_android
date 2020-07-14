@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -13,8 +14,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.aquariumtracker.database.model.Measurement
 import com.example.aquariumtracker.database.model.Parameter
+import com.example.aquariumtracker.viewmodels.MeasurementViewModel
 import com.example.aquariumtracker.viewmodels.ParameterViewModel
+import java.util.*
 import kotlin.properties.Delegates
 
 class AddMeasurement : Fragment() {
@@ -29,6 +33,7 @@ class AddMeasurement : Fragment() {
     }
 
     private lateinit var paramViewModel: ParameterViewModel
+    private lateinit var measureViewModel: MeasurementViewModel
     private var aq_ID by Delegates.notNull<Int>()
 
 
@@ -45,6 +50,8 @@ class AddMeasurement : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
 
         paramViewModel = ViewModelProvider(this).get(ParameterViewModel::class.java)
+        measureViewModel = ViewModelProvider(this).get(MeasurementViewModel::class.java)
+
         paramViewModel.getParametersForAquarium(aq_ID).observe(viewLifecycleOwner, Observer { params ->
             params?.let {
                 viewAdapter.setParameters(it)
@@ -61,9 +68,16 @@ class AddMeasurement : Fragment() {
     private fun saveMeasurements(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.param_list)
         for (c in 0 until recyclerView.childCount) {
-                var holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(c))
-                var tv = holder.itemView.findViewById<TextView>(R.id.units)
-                Log.i("AddMeasurement", c.toString() +  tv.text)
+                val holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(c))
+                val entry = holder.itemView.findViewById<EditText>(R.id.param_input)
+                val entry_double = try {
+                    entry.toString().toDouble()
+                } catch (e: NumberFormatException) {
+                    null
+                }
+                val pID = holder.itemView.findViewById<TextView>(R.id.param_id).text.toString().toInt()
+                measureViewModel.insert(Measurement(measure_id = 0, param_id = pID, value = entry_double, time = Calendar.getInstance().timeInMillis))
+                Log.i("AddMeasurement", c.toString())
             }
 
 
@@ -133,16 +147,18 @@ class ParameterListAdapter internal constructor(
     inner class ParameterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val unitsTextView: TextView = itemView.findViewById(R.id.units)
         val paramNameTextView: TextView = itemView.findViewById(R.id.param_name)
+        val paramIDStorage: TextView = itemView.findViewById(R.id.param_id)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParameterViewHolder {
-        val itemView = inflater.inflate(R.layout.recycle_parameter_add, parent, false)
+        val itemView = inflater.inflate(R.layout.recycle_measurement_add, parent, false)
         return ParameterViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ParameterViewHolder, position: Int) {
         val current = parameters[position]
-        holder.unitsTextView.text = current.param_id.toString()
+        holder.paramIDStorage.text = current.param_id.toString()
+        holder.unitsTextView.text = current.units
         holder.paramNameTextView.text = current.name
     }
 

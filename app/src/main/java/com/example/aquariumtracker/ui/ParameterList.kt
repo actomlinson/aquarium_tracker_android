@@ -1,7 +1,6 @@
 package com.example.aquariumtracker.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ class ParameterList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val table = view.findViewById<TableLayout>(R.id.parameter_table)
-        Log.i("param_list", table.getChildAt(0).toString())
 
     }
 

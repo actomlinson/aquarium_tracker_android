@@ -12,6 +12,6 @@ import java.util.*
 data class Measurement(
     @PrimaryKey(autoGenerate = true) val measure_id: Int,
     @ColumnInfo val param_id: Int,
-    @ColumnInfo val value: Double,
+    @ColumnInfo val value: Double?,
     @ColumnInfo val time: Long = Calendar.getInstance().timeInMillis
 )
