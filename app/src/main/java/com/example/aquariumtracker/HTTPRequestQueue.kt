@@ -5,6 +5,7 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 
+// look at aquariumdao to see if you can remove context from constructor
 class HTTPRequestQueue constructor(context: Context) {
 
     companion object {

@@ -1,14 +1,20 @@
 <resources>
     <string name="app_name">AquariumTracker</string>
+
     <string name="action_settings">Settings</string>
+    <string name="action_save">Save</string>
+    <string name="action_add">Add</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
+
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
     <string name="menu_aquarium">Aquariums</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Previous</string>
@@ -16,5 +22,16 @@
     <string name="aquarium_view_overview">Overview</string>
     <string name="aquarium_view_livestock">Livestock</string>
     <string name="aquarium_view_plant">Plants</string>
+    <string name="aquarium_view_params">Parameters</string>
+
+    <string name="measure_nitrite">Nitrite</string>
+    <string name="measure_nitrate">Nitrate</string>
+    <string name="measure_pH">pH</string>
+    <string name="measure_GH">Total Hardness (GH)</string>
+    <string name="measure_chlorine">Chlorine</string>
+    <string name="measure_kh">Total Alkalinity (KH)</string>
+
+    <string name="units_mg_p_L">(mg / L)</string>
+
 
 </resources>
