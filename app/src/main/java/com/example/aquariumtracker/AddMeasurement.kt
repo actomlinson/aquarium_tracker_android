@@ -45,7 +45,7 @@ class AddMeasurement : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
 
         paramViewModel = ViewModelProvider(this).get(ParameterViewModel::class.java)
-        paramViewModel.aq0Params.observe(viewLifecycleOwner, Observer { params ->
+        paramViewModel.getParametersForAquarium(aq_ID).observe(viewLifecycleOwner, Observer { params ->
             params?.let {
                 viewAdapter.setParameters(it)
             }

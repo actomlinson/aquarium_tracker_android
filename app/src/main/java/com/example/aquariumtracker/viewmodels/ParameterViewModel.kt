@@ -17,7 +17,6 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
     val allParams: LiveData<List<Parameter>>
     val aq0Params: LiveData<List<Parameter>>
 
-
     init {
         val parameterDAO = AppDatabase.getDatabase(application, viewModelScope).parameterDao()
         repository = ParameterRepository(parameterDAO)
