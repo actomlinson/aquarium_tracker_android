@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.aquariumtracker.R
 
-class AquariumOverviewFragment : Fragment() {
+class AquariumOverview : Fragment() {
 
 
     override fun onCreateView(

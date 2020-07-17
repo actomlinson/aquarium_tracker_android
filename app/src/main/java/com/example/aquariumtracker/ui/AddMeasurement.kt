@@ -1,4 +1,4 @@
-package com.example.aquariumtracker
+package com.example.aquariumtracker.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Measurement
 import com.example.aquariumtracker.database.model.Parameter
 import com.example.aquariumtracker.viewmodels.MeasurementViewModel
@@ -45,7 +46,8 @@ class AddMeasurement : Fragment() {
         Log.i("aquarium ID", aq_ID.toString())
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.param_list)
-        val viewAdapter = ParameterListAdapter(view.context.applicationContext)
+        val viewAdapter =
+            ParameterListAdapter(view.context.applicationContext)
         recyclerView.adapter = viewAdapter
         recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
 

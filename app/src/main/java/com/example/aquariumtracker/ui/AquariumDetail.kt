@@ -127,7 +127,7 @@ class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAda
 
         return when (position) {
             2 -> ParameterList()
-            else -> AquariumOverviewFragment()
+            else -> AquariumOverview()
         }
 
     }
