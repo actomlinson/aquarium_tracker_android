@@ -1,9 +1,6 @@
 package com.example.aquariumtracker.database.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(tableName = "parameter_table", foreignKeys =
     [ForeignKey(entity = Aquarium::class, parentColumns = ["aq_id"], childColumns = ["aq_id"])])
@@ -15,3 +12,14 @@ data class Parameter(
     @ColumnInfo val units: String
 )
 
+data class ParameterWithMeasurements(
+    @Embedded val param: Parameter,
+    @Relation(
+        parentColumn = "param_id",
+        entityColumn = "param_id"
+    ) val measurements: List<Measurement>
+) {
+    fun getSortedMeasurements() : List<Measurement> {
+        return measurements.sortedBy { m -> m.time }.reversed()
+    }
+}

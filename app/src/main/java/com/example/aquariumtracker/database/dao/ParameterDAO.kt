@@ -1,11 +1,9 @@
 package com.example.aquariumtracker.database.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.aquariumtracker.database.model.Parameter
+import com.example.aquariumtracker.database.model.ParameterWithMeasurements
 
 @Dao
 interface ParameterDAO {
@@ -24,4 +22,8 @@ interface ParameterDAO {
 
     @Query("DELETE FROM parameter_table")
     suspend fun deleteAll()
+
+    @Transaction
+    @Query("SELECT * FROM parameter_table")
+    fun getParameterWithMeasurements(): LiveData<List<ParameterWithMeasurements>>
 }

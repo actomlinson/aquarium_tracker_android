@@ -47,6 +47,8 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getParametersForAquarium(aqID: Int) = repository.getParametersForAquarium(aqID)
 
+    fun getParametersWithMeasurements() = repository.getParameterWithMeasurements()
+
     fun insert(param: Parameter) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(param)
     }

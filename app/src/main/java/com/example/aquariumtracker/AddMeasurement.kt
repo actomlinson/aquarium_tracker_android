@@ -71,13 +71,13 @@ class AddMeasurement : Fragment() {
                 val holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(c))
                 val entry = holder.itemView.findViewById<EditText>(R.id.param_input)
                 val entry_double = try {
-                    entry.toString().toDouble()
+                    entry.text.toString().toDouble()
                 } catch (e: NumberFormatException) {
                     null
                 }
                 val pID = holder.itemView.findViewById<TextView>(R.id.param_id).text.toString().toInt()
                 measureViewModel.insert(Measurement(measure_id = 0, param_id = pID, value = entry_double, time = Calendar.getInstance().timeInMillis))
-                Log.i("AddMeasurement", c.toString())
+                Log.i("AddMeasurement", entry_double.toString())
             }
 
 
