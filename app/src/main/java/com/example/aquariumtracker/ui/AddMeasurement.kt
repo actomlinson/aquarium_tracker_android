@@ -6,9 +6,6 @@ import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.widget.Toolbar
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -60,11 +57,6 @@ class AddMeasurement : Fragment() {
             }
         })
 
-        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-
-        val drawerLayout = this.activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
-        val drawerToggle = ActionBarDrawerToggle(this.activity, drawerLayout, toolbar, 0,0)
-        drawerToggle.syncState()
     }
 
     private fun saveMeasurements(view: View) {

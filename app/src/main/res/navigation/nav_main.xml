@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/addMeasurement"
         android:name="com.example.aquariumtracker.ui.AddMeasurement"
-        android:label="fragment_add_measurement"
+        android:label="add"
         tools:layout="@layout/fragment_add_measurement" >
         <action
             android:id="@+id/action_addMeasurement_to_aquariumFragment"
