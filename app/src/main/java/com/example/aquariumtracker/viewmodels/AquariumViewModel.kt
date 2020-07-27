@@ -22,6 +22,12 @@ class AquariumViewModel(application: Application) : AndroidViewModel(application
         allAquariums = repository.allAquariums
     }
 
+    fun getAquariumsFromNetwork() {
+        viewModelScope.launch {
+            repository.getAquariumsFromNetwork()
+        }
+    }
+
     fun insert(aq: Aquarium) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(aq)
     }

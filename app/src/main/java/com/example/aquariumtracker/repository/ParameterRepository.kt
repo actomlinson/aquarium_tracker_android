@@ -13,8 +13,8 @@ class ParameterRepository(private val parameterDAO: ParameterDAO) {
 
     val allParams: LiveData<List<Parameter>> = parameterDAO.getAllParametersList()
 
-    fun getParameterWithMeasurements(): LiveData<List<ParameterWithMeasurements>>
-            = parameterDAO.getParameterWithMeasurements()
+    fun getParameterWithMeasurements(aqID: Int): LiveData<List<ParameterWithMeasurements>>
+            = parameterDAO.getParameterWithMeasurements(aqID)
 
     suspend fun insert(param: Parameter) {
         parameterDAO.insert(param)

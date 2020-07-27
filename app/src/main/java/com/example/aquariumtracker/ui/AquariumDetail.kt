@@ -102,7 +102,7 @@ class AquariumFragment : Fragment() {
                 when (tabLayout?.selectedTabPosition) {
                     0 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement, bundleOf("aq_ID" to aq_ID))
                     1 -> Log.i("tab 1", "")
-                    2 -> Log.i("tab 2", "")
+                    2 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     3 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     else -> super.onOptionsItemSelected(item)
                 }

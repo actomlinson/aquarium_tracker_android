@@ -22,12 +22,9 @@ import kotlin.properties.Delegates
 
 class ParameterList : Fragment() {
 
-
     private lateinit var paramViewModel: ParameterViewModel
     private lateinit var measureViewModel: MeasurementViewModel
     private var aq_ID by Delegates.notNull<Int>()
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,18 +49,16 @@ class ParameterList : Fragment() {
         paramViewModel = ViewModelProvider(this).get(ParameterViewModel::class.java)
         measureViewModel = ViewModelProvider(this).get(MeasurementViewModel::class.java)
 
-
-        paramViewModel.getParametersWithMeasurements().observe(viewLifecycleOwner, Observer {
+        paramViewModel.getParametersWithMeasurements(aq_ID).observe(viewLifecycleOwner, Observer {
             params -> params?.let {
             viewAdapter.setParametersWithMeasurements(it)
         }
         })
-        paramViewModel.getParametersForAquarium(aq_ID).observe(viewLifecycleOwner, Observer { params ->
-            params?.let {
-                viewAdapter.setParameters(it)
-            }
-        })
-
+//        paramViewModel.getParametersForAquarium(aq_ID).observe(viewLifecycleOwner, Observer { params ->
+//            params?.let {
+//                viewAdapter.setParameters(it)
+//            }
+//        })
     }
 
 }
@@ -94,8 +89,8 @@ class MeasurementListAdapter internal constructor(
         val currentm = current.getSortedMeasurements()
         holder.paramNameTextView.text = current.param.name
         Log.i("",current.getSortedMeasurements().toString())
-        holder.measure1.text = currentm[0].value.toString()
-        holder.measure2.text = currentm[1].value.toString()
+        holder.measure1.text = if (currentm.size > 0) currentm[0].value.toString() else "-"
+        holder.measure2.text = if (currentm.size > 1) currentm[1].value.toString() else "-"
     }
 
     internal fun setMeasurements(measurements: List<List<Measurement>>) {

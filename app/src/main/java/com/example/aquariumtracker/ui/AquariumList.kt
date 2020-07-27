@@ -54,7 +54,7 @@ class AquariumList : Fragment() {
 
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         fab.setOnClickListener {
-
+            aqViewModel.getAquariumsFromNetwork()
         }
 
 //

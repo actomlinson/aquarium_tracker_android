@@ -53,6 +53,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     // for http requests
     implementation 'com.android.volley:volley:1.1.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
     // from room tutorial https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/#3
     // Room components

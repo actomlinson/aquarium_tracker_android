@@ -19,6 +19,9 @@ interface AquariumDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(aq: Aquarium)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(aqs: List<Aquarium>)
+
     @Query("DELETE FROM aquarium_table")
     suspend fun deleteAll()
 }

@@ -24,6 +24,6 @@ interface ParameterDAO {
     suspend fun deleteAll()
 
     @Transaction
-    @Query("SELECT * FROM parameter_table")
-    fun getParameterWithMeasurements(): LiveData<List<ParameterWithMeasurements>>
+    @Query("SELECT * FROM parameter_table WHERE aq_id = :aqID")
+    fun getParameterWithMeasurements(aqID: Int): LiveData<List<ParameterWithMeasurements>>
 }
