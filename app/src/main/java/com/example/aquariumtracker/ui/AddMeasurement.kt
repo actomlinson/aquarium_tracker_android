@@ -2,7 +2,6 @@ package com.example.aquariumtracker.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
@@ -63,8 +62,6 @@ class AddMeasurement : Fragment() {
     }
 
     private fun saveMeasurements(view: View) {
-        val recyclerView = view.findViewById<RecyclerView>(R.id.param_list)
-
         for (c in 0 until viewAdapter.itemCount) {
             val entry = viewAdapter.texts[c]
             val entryDouble = try {
@@ -73,8 +70,11 @@ class AddMeasurement : Fragment() {
                 null
             }
             val pID = viewAdapter.parameters[c].param_id
-            measureViewModel.insert(Measurement(measure_id = 0, param_id = pID, value = entryDouble, time = Calendar.getInstance().timeInMillis))
-            Log.i("AddMeasurement", c.toString() + viewAdapter.parameters[c].toString() + viewAdapter.texts[c]?.text)
+            measureViewModel.insert(Measurement(
+                measure_id = 0, param_id = pID, value = entryDouble,
+                time = Calendar.getInstance().timeInMillis)
+            )
+            //Log.i("AddMeasurement", c.toString() + viewAdapter.parameters[c].toString() + viewAdapter.texts[c]?.text)
         }
     }
 
@@ -119,7 +119,7 @@ class ParameterListAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: ParameterViewHolder, position: Int) {
-        texts[position] = holder.paramInput
+        texts[position] = holder.paramInput // save this to be accessed later when saving measurements
         val current = parameters[position]
         holder.paramIDStorage.text = current.param_id.toString()
         holder.unitsTextView.text = current.param_id.toString() // current.units
