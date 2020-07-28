@@ -19,6 +19,7 @@ import com.example.aquariumtracker.viewmodels.AquariumSelector
 import com.example.aquariumtracker.viewmodels.MeasurementViewModel
 import com.example.aquariumtracker.viewmodels.ParameterViewModel
 import java.util.*
+import kotlin.collections.HashMap
 
 class AddMeasurement : Fragment() {
 
@@ -34,13 +35,14 @@ class AddMeasurement : Fragment() {
     private lateinit var paramViewModel: ParameterViewModel
     private lateinit var measureViewModel: MeasurementViewModel
     private val aqSelector: AquariumSelector by activityViewModels()
+    private lateinit var viewAdapter: ParameterListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.param_list)
-        val viewAdapter =
+        viewAdapter =
             ParameterListAdapter(view.context.applicationContext)
         recyclerView.adapter = viewAdapter
         recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
@@ -62,18 +64,18 @@ class AddMeasurement : Fragment() {
 
     private fun saveMeasurements(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.param_list)
-        for (c in 0 until recyclerView.childCount) {
-                val holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(c))
-                val entry = holder.itemView.findViewById<EditText>(R.id.param_input)
-                val entry_double = try {
-                    entry.text.toString().toDouble()
-                } catch (e: NumberFormatException) {
-                    null
-                }
-                val pID = holder.itemView.findViewById<TextView>(R.id.param_id).text.toString().toInt()
-                measureViewModel.insert(Measurement(measure_id = 0, param_id = pID, value = entry_double, time = Calendar.getInstance().timeInMillis))
-                Log.i("AddMeasurement", entry_double.toString())
+
+        for (c in 0 until viewAdapter.itemCount) {
+            val entry = viewAdapter.texts[c]
+            val entryDouble = try {
+                entry?.text.toString().toDouble()
+            } catch (e: NumberFormatException) {
+                null
             }
+            val pID = viewAdapter.parameters[c].param_id
+            measureViewModel.insert(Measurement(measure_id = 0, param_id = pID, value = entryDouble, time = Calendar.getInstance().timeInMillis))
+            Log.i("AddMeasurement", c.toString() + viewAdapter.parameters[c].toString() + viewAdapter.texts[c]?.text)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -101,12 +103,14 @@ class ParameterListAdapter internal constructor(
 ) : RecyclerView.Adapter<ParameterListAdapter.ParameterViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var parameters = emptyList<Parameter>()
+    var parameters = emptyList<Parameter>()
+    var texts: HashMap<Int, EditText> = HashMap()
 
     inner class ParameterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val unitsTextView: TextView = itemView.findViewById(R.id.units)
         val paramNameTextView: TextView = itemView.findViewById(R.id.param_name)
         val paramIDStorage: TextView = itemView.findViewById(R.id.param_id)
+        val paramInput: EditText = itemView.findViewById(R.id.param_input)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParameterViewHolder {
@@ -115,6 +119,7 @@ class ParameterListAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: ParameterViewHolder, position: Int) {
+        texts[position] = holder.paramInput
         val current = parameters[position]
         holder.paramIDStorage.text = current.param_id.toString()
         holder.unitsTextView.text = current.param_id.toString() // current.units
