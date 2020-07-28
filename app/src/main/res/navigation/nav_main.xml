@@ -35,10 +35,6 @@
         android:name="com.example.aquariumtracker.ui.AquariumFragment"
         android:label="{aq_name}"
         tools:layout="@layout/fragment_aquarium_detail" >
-        <argument
-            android:name="aq_num"
-            app:argType="integer"
-            android:defaultValue="0" />
 
         <action
             android:id="@+id/action_aquariumFragment_to_addMeasurement"

@@ -4,21 +4,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.aquariumtracker.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.aquariumtracker.viewmodels.AquariumSelector
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlin.properties.Delegates
 
 class AquariumFragment : Fragment() {
 
     private val numTabs : Int = 5
-    private var aq_ID by Delegates.notNull<Int>()
+    private val aqSelector: AquariumSelector by activityViewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -32,9 +31,8 @@ class AquariumFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        aq_ID = arguments?.getInt("aq_num") ?: 0
-
-        Log.i("aquarium fragment", "")
+//        var aq_ID = 0
+//        aqSelector.selected.observe(viewLifecycleOwner, Observer { i -> i?.let { aq_ID = i } })
 
         val viewPager = view.findViewById<ViewPager2>(R.id.pager)
         val demoCollectionAdapter = DemoCollectionAdapter(this, numTabs)
@@ -73,11 +71,11 @@ class AquariumFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener {
-            Log.i("fab", "aquarium")
-            findNavController().navigate(R.id.action_aquariumFragment_to_addMeasurement)
-        }
+//        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
+//        fab.setOnClickListener {
+//            Log.i("fab", "aquarium")
+//            findNavController().navigate(R.id.action_aquariumFragment_to_addMeasurement)
+//        }
 
     }
 
@@ -100,7 +98,7 @@ class AquariumFragment : Fragment() {
                 val navController = findNavController()
 
                 when (tabLayout?.selectedTabPosition) {
-                    0 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement, bundleOf("aq_ID" to aq_ID))
+                    0 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     1 -> Log.i("tab 1", "")
                     2 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     3 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)

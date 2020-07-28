@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,15 +17,15 @@ import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Measurement
 import com.example.aquariumtracker.database.model.Parameter
 import com.example.aquariumtracker.database.model.ParameterWithMeasurements
+import com.example.aquariumtracker.viewmodels.AquariumSelector
 import com.example.aquariumtracker.viewmodels.MeasurementViewModel
 import com.example.aquariumtracker.viewmodels.ParameterViewModel
-import kotlin.properties.Delegates
 
 class ParameterList : Fragment() {
 
     private lateinit var paramViewModel: ParameterViewModel
     private lateinit var measureViewModel: MeasurementViewModel
-    private var aq_ID by Delegates.notNull<Int>()
+    private val aqSelector: AquariumSelector by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,9 +38,8 @@ class ParameterList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //val table = view.findViewById<TableLayout>(R.id.measure_table)
-
-        aq_ID = arguments?.getInt("aq_ID") ?: 0
-        Log.i("aquarium ID", aq_ID.toString())
+        var aq_ID = 0
+        aqSelector.selected.observe(viewLifecycleOwner, Observer { i -> i?.let { aq_ID = i } })
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycle_measure)
         val viewAdapter = MeasurementListAdapter(view.context.applicationContext)
