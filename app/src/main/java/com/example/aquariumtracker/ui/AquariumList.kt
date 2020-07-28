@@ -69,17 +69,13 @@ class AquariumListAdapter internal constructor(
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var aquariums = emptyList<Aquarium>()
-    private val aqSelector: AquariumSelector
+    private val aqSelector: AquariumSelector = aquariumSelector
 
     inner class AquariumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val aqCard: CardView = itemView.findViewById(R.id.aq_list_card)
         val aqNameTextView: TextView = itemView.findViewById(R.id.aq_name)
         val aqNumTextView: TextView = itemView.findViewById(R.id.aq_num)
         val aqDateTextView: TextView = itemView.findViewById(R.id.aq_date)
-    }
-
-    init {
-        aqSelector = aquariumSelector
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AquariumViewHolder {
@@ -91,7 +87,8 @@ class AquariumListAdapter internal constructor(
         val current = aquariums[position]
         holder.aqNameTextView.text = current.nickname
         holder.aqNumTextView.text = current.aq_id.toString()
-        val date = Calendar.getInstance().apply { timeInMillis = current.startDate }
+//        val date = Calendar.getInstance().apply { timeInMillis = current.startDate }
+        val date = Calendar.getInstance().apply { current.startDateStr }
 
         holder.aqDateTextView.text = date.time.toString()
         holder.aqCard.setOnClickListener {

@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(entities = [Aquarium::class, Parameter::class, Measurement::class], version = 1, exportSchema = false)
-public abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun aquariumDao(): AquariumDAO
     abstract fun parameterDao(): ParameterDAO
@@ -37,9 +37,9 @@ public abstract class AppDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(aqDAO: AquariumDAO, parameterDAO: ParameterDAO) {
             aqDAO.deleteAll()
-            aqDAO.insert(Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble()))
+            aqDAO.insert(Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble(), ""))
             createDefaultParametersForAquarium(0, parameterDAO)
-            aqDAO.insert(Aquarium(1, "Betta Tank", 5.toDouble()))
+            aqDAO.insert(Aquarium(1, "Betta Tank", 5.toDouble(), ""))
             createDefaultParametersForAquarium(1, parameterDAO)
 
         }
