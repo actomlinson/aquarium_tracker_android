@@ -14,8 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aquariumtracker.R
-import com.example.aquariumtracker.database.model.Measurement
-import com.example.aquariumtracker.database.model.Parameter
 import com.example.aquariumtracker.database.model.ParameterWithMeasurements
 import com.example.aquariumtracker.viewmodels.AquariumSelector
 import com.example.aquariumtracker.viewmodels.MeasurementViewModel
@@ -37,9 +35,6 @@ class ParameterList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val table = view.findViewById<TableLayout>(R.id.measure_table)
-        var aq_ID = 0
-        aqSelector.selected.observe(viewLifecycleOwner, Observer { i -> i?.let { aq_ID = i } })
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycle_measure)
         val viewAdapter = MeasurementListAdapter(view.context.applicationContext)
@@ -49,16 +44,17 @@ class ParameterList : Fragment() {
         paramViewModel = ViewModelProvider(this).get(ParameterViewModel::class.java)
         measureViewModel = ViewModelProvider(this).get(MeasurementViewModel::class.java)
 
-        paramViewModel.getParametersWithMeasurements(aq_ID).observe(viewLifecycleOwner, Observer {
-            params -> params?.let {
-            viewAdapter.setParametersWithMeasurements(it)
-        }
+        aqSelector.selected.observe(viewLifecycleOwner, Observer { aq ->
+            aq?.let {id ->
+                paramViewModel.getParametersWithMeasurements(id).observe(
+                    viewLifecycleOwner, Observer { params ->
+
+                        params?.let {
+                            viewAdapter.setParametersWithMeasurements(it)
+                        }
+                    })
+            }
         })
-//        paramViewModel.getParametersForAquarium(aq_ID).observe(viewLifecycleOwner, Observer { params ->
-//            params?.let {
-//                viewAdapter.setParameters(it)
-//            }
-//        })
     }
 
 }
@@ -69,9 +65,7 @@ class MeasurementListAdapter internal constructor(
 ) : RecyclerView.Adapter<MeasurementListAdapter.MeasurementViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var parameters = emptyList<Parameter>()
     private var parametersWithMeaurements = emptyList<ParameterWithMeasurements>()
-    private var measurements = emptyList<List<Measurement>>()
 
     inner class MeasurementViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val measure1: TextView = itemView.findViewById(R.id.measure1)
@@ -87,29 +81,19 @@ class MeasurementListAdapter internal constructor(
     override fun onBindViewHolder(holder: MeasurementViewHolder, position: Int) {
         val current = parametersWithMeaurements[position]
         val currentm = current.getSortedMeasurements()
-        holder.paramNameTextView.text = current.param.name
+        holder.paramNameTextView.text = current.param.aq_id.toString() //.name
         Log.i("",current.getSortedMeasurements().toString())
         holder.measure1.text = if (currentm.size > 0) currentm[0].value.toString() else "-"
         holder.measure2.text = if (currentm.size > 1) currentm[1].value.toString() else "-"
     }
 
-    internal fun setMeasurements(measurements: List<List<Measurement>>) {
-        this.measurements = measurements
-        notifyDataSetChanged()
-    }
-
-    internal fun setParameters(params: List<Parameter>) {
-        this.parameters = params
-        notifyDataSetChanged()
-    }
-
-
     internal fun setParametersWithMeasurements(params: List<ParameterWithMeasurements>) {
+        Log.i("param list fetched", params.last().toString())
         this.parametersWithMeaurements = params
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        return parameters.size
+        return parametersWithMeaurements.size
     }
 }

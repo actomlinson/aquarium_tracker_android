@@ -39,9 +39,6 @@ class AddMeasurement : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        var aqID = 0
-        aqSelector.selected.observe(viewLifecycleOwner, Observer { i -> i?.let { aqID = i } })
-
         val recyclerView = view.findViewById<RecyclerView>(R.id.param_list)
         val viewAdapter =
             ParameterListAdapter(view.context.applicationContext)
@@ -51,9 +48,13 @@ class AddMeasurement : Fragment() {
         paramViewModel = ViewModelProvider(this).get(ParameterViewModel::class.java)
         measureViewModel = ViewModelProvider(this).get(MeasurementViewModel::class.java)
 
-        paramViewModel.getParametersForAquarium(aqID).observe(viewLifecycleOwner, Observer { params ->
-            params?.let {
-                viewAdapter.setParameters(it)
+        aqSelector.selected.observe(viewLifecycleOwner, Observer { aq ->
+            aq?.let {id ->
+                paramViewModel.getParametersForAquarium(id).observe(viewLifecycleOwner, Observer { params ->
+                    params?.let {
+                        viewAdapter.setParameters(it)
+                    }
+                })
             }
         })
 
@@ -73,42 +74,6 @@ class AddMeasurement : Fragment() {
                 measureViewModel.insert(Measurement(measure_id = 0, param_id = pID, value = entry_double, time = Calendar.getInstance().timeInMillis))
                 Log.i("AddMeasurement", entry_double.toString())
             }
-
-
-
-//        val measurement = view.findViewById<EditText>(R.id.input_ph)
-//        val queue = HTTPRequestQueue.getInstance(view.context.applicationContext).requestQueue
-//        //val textView = view.findViewById<TextView>(R.id.label_ph)
-//
-//        val jsonRequest = JSONObject()
-//        jsonRequest.put("aquarium", "http://192.168.1.17:8080/api/aquariums/1/")
-//        jsonRequest.put("measurement", measurement.text.toString())
-//        val jsonObjectRequest = JsonObjectRequest(Request.Method.POST,
-//            HTTPRequestQueue.getInstance(view.context.applicationContext).url.plus("phmeasurements/"),
-//            jsonRequest,
-//            Response.Listener { response ->
-//                //textView.text = "Response: %s".format(response.toString())
-//            },
-//            Response.ErrorListener { error ->
-//                Log.i("volley error", jsonRequest.toString())
-//            }
-//        )
-//
-
-
-//        val stringRequest = StringRequest(
-//            Request.Method.GET,
-//            HTTPRequestQueue.getInstance(view.context.applicationContext).url.plus("phmeasurements/"),
-//            Response.Listener<String> { response ->
-//                // Display the first 500 characters of the response string.
-//                textView.text = "Response is: ${response}" //.substring(0, 500)}"
-//                Log.i("response listener", "error")
-//            },
-//            Response.ErrorListener { error ->
-//                textView.text = error.toString() //"That didn't work!"
-//                Log.i("error listener", error.toString())
-//            })
-//        queue.add(jsonObjectRequest)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -152,7 +117,7 @@ class ParameterListAdapter internal constructor(
     override fun onBindViewHolder(holder: ParameterViewHolder, position: Int) {
         val current = parameters[position]
         holder.paramIDStorage.text = current.param_id.toString()
-        holder.unitsTextView.text = current.units
+        holder.unitsTextView.text = current.param_id.toString() // current.units
         holder.paramNameTextView.text = current.name
     }
 
