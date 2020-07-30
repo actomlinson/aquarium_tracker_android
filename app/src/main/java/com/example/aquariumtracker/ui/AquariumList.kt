@@ -45,7 +45,6 @@ class AquariumList : Fragment() {
         recyclerView.adapter = viewAdapter
         recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
 
-
         aqViewModel = ViewModelProvider(this).get(AquariumViewModel::class.java)
         aqViewModel.allAquariums.observe(viewLifecycleOwner, Observer { aqs ->
             aqs?.let {
