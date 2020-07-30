@@ -12,6 +12,7 @@ data class Parameter(
     @ColumnInfo val units: String
 )
 
+/* Defines relationship (1-M) between parameters and measurements. */
 data class ParameterWithMeasurements(
     @Embedded val param: Parameter,
     @Relation(
