@@ -1,7 +1,10 @@
 package com.example.aquariumtracker.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.AlarmClock
+import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
@@ -58,10 +61,24 @@ class AddMeasurement : Fragment() {
                 })
             }
         })
-
     }
 
-    private fun saveMeasurements(view: View) {
+    private fun startTimer(message: String, seconds: Int) {
+        val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
+            putExtra(AlarmClock.EXTRA_MESSAGE, message)
+            putExtra(AlarmClock.EXTRA_LENGTH, seconds)
+            putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+        }
+        val packageManager = context?.packageManager
+        if (packageManager != null && intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        }
+    }
+
+    private fun saveMeasurements() {
+        val cal = Calendar.getInstance()
+        val time = cal.timeInMillis
+
         for (c in 0 until viewAdapter.itemCount) {
             val entry = viewAdapter.texts[c]
             val entryDouble = try {
@@ -72,9 +89,9 @@ class AddMeasurement : Fragment() {
             val pID = viewAdapter.parameters[c].param_id
             measureViewModel.insert(Measurement(
                 measure_id = 0, param_id = pID, value = entryDouble,
-                time = Calendar.getInstance().timeInMillis)
+                time = time)
             )
-            //Log.i("AddMeasurement", c.toString() + viewAdapter.parameters[c].toString() + viewAdapter.texts[c]?.text)
+            Log.i("AddMeasurement", time.toString())
         }
     }
 
@@ -89,7 +106,7 @@ class AddMeasurement : Fragment() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_save -> {
-                this.view?.let { saveMeasurements(it) }
+                saveMeasurements()
                 return true
             }
             else -> super.onOptionsItemSelected(item)
