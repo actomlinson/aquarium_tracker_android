@@ -86,6 +86,7 @@ class AquariumFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_add, menu)
+        inflater.inflate(R.menu.menu_delete, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -103,6 +104,15 @@ class AquariumFragment : Fragment() {
                     2 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     3 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     else -> super.onOptionsItemSelected(item)
+                }
+
+                return true
+            }
+            R.id.action_delete -> {
+
+                this.context?.let {
+                    val aqDeleteDialog = AquariumDeleteDialog(it)
+                    aqDeleteDialog.show()
                 }
 
                 return true
