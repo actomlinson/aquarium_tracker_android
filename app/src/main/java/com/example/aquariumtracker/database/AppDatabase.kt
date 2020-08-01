@@ -40,10 +40,12 @@ abstract class AppDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(aqDAO: AquariumDAO, parameterDAO: ParameterDAO) {
             aqDAO.deleteAll()
-            aqDAO.insert(Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble(), ""))
-            createDefaultParametersForAquarium(0, parameterDAO)
-            aqDAO.insert(Aquarium(1, "Betta Tank", 5.toDouble(), ""))
-            createDefaultParametersForAquarium(1, parameterDAO)
+            val aq0 = Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble(), "")
+            val aq0ID = aqDAO.insert(aq0)
+            createDefaultParametersForAquarium(aq0ID.toInt(), parameterDAO)
+            val aq1 = Aquarium( aq_id = 0, nickname = "Betta Tank", size = 5.toDouble(), startDateStr = "")
+            val aq1ID = aqDAO.insert(aq1)
+            createDefaultParametersForAquarium(aq1ID.toInt(), parameterDAO)
 
         }
 

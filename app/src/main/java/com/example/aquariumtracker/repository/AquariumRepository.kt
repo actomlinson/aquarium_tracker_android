@@ -45,7 +45,7 @@ class AquariumRepository(private val aquariumDAO: AquariumDAO) {
 
     fun getAquarium(aqID: Int) = aquariumDAO.getAquarium(aqID)
 
-    suspend fun insert(aq: Aquarium) {
-        aquariumDAO.insert(aq)
+    suspend fun insert(aq: Aquarium): Long {
+        return aquariumDAO.insert(aq)
     }
 }

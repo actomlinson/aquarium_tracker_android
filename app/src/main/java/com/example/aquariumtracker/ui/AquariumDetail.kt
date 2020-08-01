@@ -107,6 +107,9 @@ class AquariumFragment : Fragment() {
 
                 return true
             }
+//            R.id.action_settings -> {
+//
+//            }
             else -> super.onOptionsItemSelected(item)
         }
     }

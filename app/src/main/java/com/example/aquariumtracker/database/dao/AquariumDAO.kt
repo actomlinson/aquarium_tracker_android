@@ -17,7 +17,7 @@ interface AquariumDAO {
     fun getAquariumList(): LiveData<List<Aquarium>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(aq: Aquarium)
+    suspend fun insert(aq: Aquarium): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(aqs: List<Aquarium>)

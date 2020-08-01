@@ -2,9 +2,7 @@ package com.example.aquariumtracker.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
@@ -13,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aquariumtracker.R
@@ -39,7 +38,8 @@ class AquariumList : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        
+        setHasOptionsMenu(true)
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.aq_list)
         val viewAdapter = AquariumListAdapter(view.context.applicationContext, aqSelector)
         recyclerView.adapter = viewAdapter
@@ -57,6 +57,27 @@ class AquariumList : Fragment() {
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         fab.setOnClickListener {
             aqViewModel.getAquariumsFromNetwork()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_add, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.action_add -> {
+                findNavController().navigate(R.id.action_nav_aquarium_list_to_aquariumSettings)
+                return true
+            }
+//            R.id.action_settings -> {
+//
+//            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_nav_aquarium_list_to_aquariumFragment"
             app:destination="@id/aquariumFragment" />
+        <action
+            android:id="@+id/action_nav_aquarium_list_to_aquariumSettings"
+            app:destination="@id/aquariumSettings" />
     </fragment>
 
     <fragment
@@ -47,4 +50,12 @@
         android:id="@+id/parameterList"
         android:name="com.example.aquariumtracker.ui.ParameterList"
         android:label="ParameterList" />
+    <fragment
+        android:id="@+id/aquariumSettings"
+        android:name="com.example.aquariumtracker.ui.AquariumSettings"
+        android:label="AquariumSettings" >
+        <action
+            android:id="@+id/action_aquariumSettings_to_nav_aquarium_list"
+            app:destination="@id/nav_aquarium_list" />
+    </fragment>
 </navigation>

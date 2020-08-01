@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.aquariumtracker.database.AppDatabase
 import com.example.aquariumtracker.database.model.Aquarium
 import com.example.aquariumtracker.repository.AquariumRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AquariumViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -28,8 +28,11 @@ class AquariumViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun insert(aq: Aquarium) = viewModelScope.launch(Dispatchers.IO) {
-        repository.insert(aq)
+    suspend fun insert(aq: Aquarium): Long {
+        return withContext(viewModelScope.coroutineContext) {
+            repository.insert(aq)
+        }
     }
+
 
 }

@@ -34,12 +34,12 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
             )
             val defaultParams = (paramDefaultNames.indices).map { i ->
                 Parameter( p_order = i, aq_id = aqID, name = paramDefaultNames[i],
-                    units = paramDefaultUnits[i], param_id = i
+                    units = paramDefaultUnits[i], param_id = 0
                 )
             }
 
             for (i in defaultParams) {
-                Log.i("param name index", i.name)
+                Log.i("ParameterViewModel", i.name)
             }
             repository.insertAll(defaultParams)
         }
