@@ -21,6 +21,6 @@ interface ReminderDAO {
     suspend fun deleteAll()
 
     @Transaction
-    @Query("SELECT * FROM aquarium_table")
+    @Query("SELECT * FROM aquarium_table WHERE aq_id = :aqID")
     fun getAquariumWithReminders(aqID: Int): LiveData<List<AquariumWithReminders>>
 }

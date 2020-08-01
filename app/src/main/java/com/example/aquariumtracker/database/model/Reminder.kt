@@ -21,11 +21,13 @@ data class AquariumReminderCrossRef(
 )
 
 data class AquariumWithReminders(
+
     @Embedded val aq: Aquarium,
     @Relation(
         parentColumn = "aq_id",
         entityColumn = "reminder_id",
-        associateBy = Junction(AquariumReminderCrossRef::class)
+        associateBy = Junction(AquariumReminderCrossRef::class, parentColumn = "aq_id", entityColumn = "reminder_id")
+
     )
     val reminders: List<Reminder>
 )

@@ -8,18 +8,21 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.aquariumtracker.database.dao.AquariumDAO
 import com.example.aquariumtracker.database.dao.MeasurementDAO
 import com.example.aquariumtracker.database.dao.ParameterDAO
-import com.example.aquariumtracker.database.model.Aquarium
-import com.example.aquariumtracker.database.model.Measurement
-import com.example.aquariumtracker.database.model.Parameter
+import com.example.aquariumtracker.database.dao.ReminderDAO
+import com.example.aquariumtracker.database.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Aquarium::class, Parameter::class, Measurement::class], version = 1, exportSchema = false)
+@Database(entities = [
+    Aquarium::class, Parameter::class, Measurement::class, Reminder::class, AquariumReminderCrossRef::class
+], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun aquariumDao(): AquariumDAO
     abstract fun parameterDao(): ParameterDAO
     abstract fun measurementDao(): MeasurementDAO
+    abstract fun reminderDao(): ReminderDAO
+
 
     private class AppDatabaseCallback(
         private val scope: CoroutineScope
