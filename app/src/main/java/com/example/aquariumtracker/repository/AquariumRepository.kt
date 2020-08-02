@@ -48,4 +48,8 @@ class AquariumRepository(private val aquariumDAO: AquariumDAO) {
     suspend fun insert(aq: Aquarium): Long {
         return aquariumDAO.insert(aq)
     }
+
+    suspend fun deleteAquarium(aqID: Int) {
+        aquariumDAO.deleteAquarium(aqID)
+    }
 }

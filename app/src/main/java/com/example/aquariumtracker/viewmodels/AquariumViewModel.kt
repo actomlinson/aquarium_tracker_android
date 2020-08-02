@@ -34,5 +34,9 @@ class AquariumViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-
+    fun deleteAquarium(aqID: Int) {
+        viewModelScope.launch {
+            repository.deleteAquarium(aqID)
+        }
+    }
 }

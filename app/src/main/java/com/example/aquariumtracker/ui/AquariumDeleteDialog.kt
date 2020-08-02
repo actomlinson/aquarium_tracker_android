@@ -1,70 +1,35 @@
 package com.example.aquariumtracker.ui
 
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
-import android.util.Log
+import android.view.View
 import android.widget.Button
 import com.example.aquariumtracker.R
 
-class AquariumDeleteDialog(context: Context) : AlertDialog(context) {
-    private var builder: Builder = context.let {
-        AlertDialog.Builder(it)
-    }
+class AquariumDeleteDialog(context: Context, fragment: AquariumFragment) : Dialog(context) {
     private var numClicked = 5
-    private lateinit var delButton: Button
+    private val view: View = layoutInflater.inflate(R.layout.dialog_delete, null)
+    private val delButton: Button = view.findViewById(R.id.del_button)
+    private val cancelButton: Button = view.findViewById(R.id.cancel_button)
+
+    interface DeleteDialogListener {
+        fun onDeleteConfirmation(dialog: Dialog)
+    }
 
     init {
-
-        //builder?.setMessage(R.string.delete_message)
-        val view = layoutInflater.inflate(R.layout.dialog_delete, null)
-        builder.setView(view)
-        delButton = view.findViewById<Button>(R.id.del_button)
-        val cancelButton = view.findViewById<Button>(R.id.cancel_button)
+        setContentView(view)
         cancelButton.setOnClickListener {
-            dismiss()
+            cancel()
         }
-        updateDeleteButton()
+        val listener = fragment as DeleteDialogListener
+        delButton.text = context.getString(R.string.delete_button_message, numClicked)
         delButton.setOnClickListener {
             numClicked -= 1
             if (numClicked == 0) {
-                this.dismiss()
-                this.cancel()
+                listener.onDeleteConfirmation(this)
                 dismiss()
-                cancel()
-                Log.i("AquariumDeleteDialog", "Deleted")
             }
-            updateDeleteButton()
+            delButton.text = context.getString(R.string.delete_button_message, numClicked)
         }
-        val dialog: AlertDialog? = builder.create()
-        builder.create()
     }
-
-    private fun updateDeleteButton() {
-        delButton.text = context.getString(R.string.delete_button_message, numClicked)
-    }
-
-    override fun show() {
-        builder.show()
-
-    }
-//
-//    fun onCreate(savedInstanceState: Bundle?): Dialog {
-//
-//        return context?.let {
-//            val builder = AlertDialog.Builder(it)
-//            var numClicked = 0
-//            builder.setMessage(R.string.delete_message)
-//                .setNeutralButton("Yes",
-//                DialogInterface.OnClickListener{ dialog, id ->
-//                    numClicked += 1
-//                    if (numClicked == 5) {
-//                        Log.i("AquariumDeleteDialog", "Deleted")
-//                    }
-//                })
-//                .setNegativeButton("No",
-//                DialogInterface.OnClickListener {dialog, id -> })
-//            builder.create()
-//        } ?: throw IllegalStateException("Activity cannot be null")
-//    }
-
 }

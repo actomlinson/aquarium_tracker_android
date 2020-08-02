@@ -1,23 +1,27 @@
 package com.example.aquariumtracker.ui
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.viewmodels.AquariumSelector
+import com.example.aquariumtracker.viewmodels.AquariumViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class AquariumFragment : Fragment() {
+class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
 
     private val numTabs : Int = 5
     private val aqSelector: AquariumSelector by activityViewModels()
+    private lateinit var aqViewModel: AquariumViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +37,7 @@ class AquariumFragment : Fragment() {
 
 //        var aq_ID = 0
 //        aqSelector.selected.observe(viewLifecycleOwner, Observer { i -> i?.let { aq_ID = i } })
+        aqViewModel = ViewModelProvider(this).get(AquariumViewModel::class.java)
 
         val viewPager = view.findViewById<ViewPager2>(R.id.pager)
         val demoCollectionAdapter = DemoCollectionAdapter(this, numTabs)
@@ -109,12 +114,10 @@ class AquariumFragment : Fragment() {
                 return true
             }
             R.id.action_delete -> {
-
                 this.context?.let {
-                    val aqDeleteDialog = AquariumDeleteDialog(it)
+                    val aqDeleteDialog = AquariumDeleteDialog(it, this)
                     aqDeleteDialog.show()
                 }
-
                 return true
             }
 //            R.id.action_settings -> {
@@ -122,6 +125,15 @@ class AquariumFragment : Fragment() {
 //            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDeleteConfirmation(dialog: Dialog) {
+        aqSelector.selected.value?.let {
+            Log.i("AquariumDetail", it.toString())
+            aqViewModel.deleteAquarium(it)
+        }
+        Log.i("AquariumDeleteDialog", "Deleted")
+        //findNavController().navigate(R.id.action_aquariumFragment_to_nav_aquarium_list)
     }
 
 

@@ -20,8 +20,11 @@ interface AquariumDAO {
     suspend fun insert(aq: Aquarium): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(aqs: List<Aquarium>)
+    suspend fun insertAll(aqs: List<Aquarium>): List<Long>
 
     @Query("DELETE FROM aquarium_table")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM aquarium_table WHERE aq_id = :aqID")
+    suspend fun deleteAquarium(aqID: Int)
 }
