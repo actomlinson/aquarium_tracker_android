@@ -112,7 +112,7 @@ class AquariumListAdapter internal constructor(
 
         holder.aqDateTextView.text = date.time.toString()
         holder.aqCard.setOnClickListener {
-            aqSelector.select(current.aq_id)
+            aqSelector.select(current.aq_id.toLong())
             val navController = it.findNavController()
             navController.navigate(R.id.action_nav_aquarium_list_to_aquariumFragment,
                 bundleOf("aq_name" to current.nickname)

@@ -11,7 +11,7 @@ import com.example.aquariumtracker.database.model.Aquarium
 interface AquariumDAO {
 
     @Query("SELECT * from aquarium_table WHERE aq_id = :aqID")
-    fun getAquarium(aqID: Int): LiveData<Aquarium>
+    fun getAquarium(aqID: Long): LiveData<Aquarium>
 
     @Query("SELECT * from aquarium_table ORDER BY aq_id ASC")
     fun getAquariumList(): LiveData<List<Aquarium>>
@@ -26,5 +26,5 @@ interface AquariumDAO {
     suspend fun deleteAll()
 
     @Query("DELETE FROM aquarium_table WHERE aq_id = :aqID")
-    suspend fun deleteAquarium(aqID: Int)
+    suspend fun deleteAquarium(aqID: Long)
 }

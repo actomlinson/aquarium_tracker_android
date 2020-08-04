@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 
 class AquariumSelector() : ViewModel() {
 
-    val selected = MutableLiveData<Int>()
+    val selected = MutableLiveData<Long>()
 
-    fun select(i: Int) {
+    fun select(i: Long) {
         selected.value = i
     }
 

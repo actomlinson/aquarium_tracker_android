@@ -43,13 +43,13 @@ class AquariumRepository(private val aquariumDAO: AquariumDAO) {
 
     val allAquariums: LiveData<List<Aquarium>> = aquariumDAO.getAquariumList()
 
-    fun getAquarium(aqID: Int) = aquariumDAO.getAquarium(aqID)
+    fun getAquarium(aqID: Long) = aquariumDAO.getAquarium(aqID)
 
     suspend fun insert(aq: Aquarium): Long {
         return aquariumDAO.insert(aq)
     }
 
-    suspend fun deleteAquarium(aqID: Int) {
+    suspend fun deleteAquarium(aqID: Long) {
         aquariumDAO.deleteAquarium(aqID)
     }
 }

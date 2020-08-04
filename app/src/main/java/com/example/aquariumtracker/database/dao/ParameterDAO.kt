@@ -9,7 +9,7 @@ import com.example.aquariumtracker.database.model.ParameterWithMeasurements
 interface ParameterDAO {
 
     @Query("SELECT * from parameter_table WHERE aq_id = :aqID ORDER BY p_order ASC")
-    fun getParametersForAquarium(aqID: Int): LiveData<List<Parameter>>
+    fun getParametersForAquarium(aqID: Long): LiveData<List<Parameter>>
 
     @Query("SELECT * from parameter_table ORDER BY aq_id, p_order ASC")
     fun getAllParametersList(): LiveData<List<Parameter>>
@@ -25,5 +25,5 @@ interface ParameterDAO {
 
     @Transaction
     @Query("SELECT * FROM parameter_table WHERE aq_id = :aqID")
-    fun getParameterWithMeasurements(aqID: Int): LiveData<List<ParameterWithMeasurements>>
+    fun getParameterWithMeasurements(aqID: Long): LiveData<List<ParameterWithMeasurements>>
 }

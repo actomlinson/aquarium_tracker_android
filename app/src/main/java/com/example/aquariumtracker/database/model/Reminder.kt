@@ -5,7 +5,7 @@ import java.util.*
 
 @Entity(tableName = "reminder_table")
 data class Reminder(
-    @PrimaryKey(autoGenerate = true) val reminder_id: Int,
+    @PrimaryKey(autoGenerate = true) val reminder_id: Long,
     @ColumnInfo val name: String,
     @ColumnInfo val repeatable: Boolean = true,
     @ColumnInfo val repeat_time: Int = 7,

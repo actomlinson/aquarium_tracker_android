@@ -22,7 +22,7 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
         allParams = repository.allParams
     }
 
-    fun createDefaultParametersForAquarium(aqID: Int) {
+    fun createDefaultParametersForAquarium(aqID: Long) {
         viewModelScope.launch {
             val paramDefaultNames = listOf<String>(
                 "Nitrate", "Nitrite", "Total Hardness (GH)",
@@ -45,9 +45,9 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun getParametersForAquarium(aqID: Int) = repository.getParametersForAquarium(aqID)
+    fun getParametersForAquarium(aqID: Long) = repository.getParametersForAquarium(aqID)
 
-    fun getParametersWithMeasurements(aqID: Int) = repository.getParameterWithMeasurements(aqID)
+    fun getParametersWithMeasurements(aqID: Long) = repository.getParameterWithMeasurements(aqID)
 
     fun insert(param: Parameter) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(param)

@@ -48,7 +48,7 @@ class AquariumSettings : Fragment() {
 
         lifecycleScope.launch {
             val newAqID = aqViewModel.insert(aq)
-            paramViewModel.createDefaultParametersForAquarium(newAqID.toInt())
+            paramViewModel.createDefaultParametersForAquarium(newAqID)
         }
 //        newAqID.observe(viewLifecycleOwner, Observer {
 //            paramViewModel.createDefaultParametersForAquarium(it.toInt())

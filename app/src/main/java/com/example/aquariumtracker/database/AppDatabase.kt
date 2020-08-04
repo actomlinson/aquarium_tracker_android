@@ -42,14 +42,14 @@ abstract class AppDatabase : RoomDatabase() {
             aqDAO.deleteAll()
             val aq0 = Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble(), "")
             val aq0ID = aqDAO.insert(aq0)
-            createDefaultParametersForAquarium(aq0ID.toInt(), parameterDAO)
+            createDefaultParametersForAquarium(aq0ID, parameterDAO)
             val aq1 = Aquarium( aq_id = 0, nickname = "Betta Tank", size = 5.toDouble(), startDateStr = "")
             val aq1ID = aqDAO.insert(aq1)
-            createDefaultParametersForAquarium(aq1ID.toInt(), parameterDAO)
+            createDefaultParametersForAquarium(aq1ID, parameterDAO)
 
         }
 
-        suspend fun createDefaultParametersForAquarium(aqID: Int, parameterDAO: ParameterDAO) {
+        suspend fun createDefaultParametersForAquarium(aqID: Long, parameterDAO: ParameterDAO) {
             val paramDefaultNames = listOf<String>(
                 "Nitrate", "Nitrite", "Total Hardness (GH)",
                 "Chlorine", "Total Alkalinity (KH)", "pH"
