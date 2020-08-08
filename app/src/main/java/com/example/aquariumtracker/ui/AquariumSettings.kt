@@ -44,7 +44,7 @@ class AquariumSettings : Fragment() {
     private fun saveAquarium() {
         val aq = Aquarium(aq_id = 0, nickname = aqNameInput.text.toString(),
             size = aqSizeInput.text.toString().toDouble(),
-            startDate = aqDateInput.date, startDateStr = aqDateInput.date.toString())
+            startDate = aqDateInput.date) //, startDateStr = aqDateInput.date.toString())
 
         lifecycleScope.launch {
             val newAqID = aqViewModel.insert(aq)

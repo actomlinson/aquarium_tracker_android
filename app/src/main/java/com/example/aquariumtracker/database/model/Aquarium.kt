@@ -10,7 +10,7 @@ data class Aquarium(
     @PrimaryKey(autoGenerate = true) @ColumnInfo (name = "aq_id") val aq_id: Long,
     @ColumnInfo val nickname: String,
     @ColumnInfo val size: Double,
-    @ColumnInfo val startDateStr: String,
+    //@ColumnInfo val startDateStr: String,
     @ColumnInfo(name = "start_date") val startDate: Long = Calendar.getInstance().timeInMillis
 )
 

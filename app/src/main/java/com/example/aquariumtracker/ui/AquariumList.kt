@@ -20,7 +20,6 @@ import com.example.aquariumtracker.viewmodels.AquariumSelector
 import com.example.aquariumtracker.viewmodels.AquariumViewModel
 import com.example.aquariumtracker.viewmodels.ParameterViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.*
 
 
 class AquariumList : Fragment() {
@@ -108,9 +107,9 @@ class AquariumListAdapter internal constructor(
         holder.aqNameTextView.text = current.nickname
         holder.aqNumTextView.text = current.aq_id.toString()
 //        val date = Calendar.getInstance().apply { timeInMillis = current.startDate }
-        val date = Calendar.getInstance().apply { current.startDateStr }
+//        val date = Calendar.getInstance().apply { current.startDateStr }
 
-        holder.aqDateTextView.text = date.time.toString()
+        holder.aqDateTextView.text = current.startDate.toString()
         holder.aqCard.setOnClickListener {
             aqSelector.select(current.aq_id.toLong())
             val navController = it.findNavController()
