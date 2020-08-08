@@ -25,20 +25,7 @@ class AquariumRepository(private val aquariumDAO: AquariumDAO) {
             } catch (cause: Throwable) {
                 Log.e("AquariumRepository", cause.message.toString())
             }
-
         }
-//        BACKGROUND.submit {
-//            try {
-//                val network = getNetworkService()
-//                val result = network.getAquariumList().execute()
-//                if (result.isSuccessful) {
-//                    aquariumDAO.insert(result.body().results[0])
-//                }
-//                Log.i("AquariumRepository", result.body()?.results.toString())
-//            } catch (cause: Throwable) {
-//                Log.e("AquariumRepository", cause.message.toString())
-//            }
-//        }
     }
 
     val allAquariums: LiveData<List<Aquarium>> = aquariumDAO.getAquariumList()
@@ -51,5 +38,17 @@ class AquariumRepository(private val aquariumDAO: AquariumDAO) {
 
     suspend fun deleteAquarium(aqID: Long) {
         aquariumDAO.deleteAquarium(aqID)
+        withContext(Dispatchers.IO) {
+            try {
+                val network = getNetworkService()
+                val result = network.deleteAquarium(aqID).execute()
+                if (result.isSuccessful) {
+                    Log.i("AquariumRepository", "Deletion successful")
+                } else {}
+
+            } catch (cause: Throwable) {
+                Log.e("AquariumRepository", cause.message.toString())
+            }
+        }
     }
 }
