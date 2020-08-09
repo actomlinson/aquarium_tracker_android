@@ -3,7 +3,7 @@ package com.example.aquariumtracker.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class AquariumSelector() : ViewModel() {
+class AquariumSelector : ViewModel() {
 
     val selected = MutableLiveData<Long>()
 

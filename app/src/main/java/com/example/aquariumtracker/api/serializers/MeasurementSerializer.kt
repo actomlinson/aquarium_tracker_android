@@ -25,7 +25,6 @@ class MeasurementSerializer(BASE_URL: String) : JsonSerializer<Measurement> {
         Log.i("MeasurementSerializer", json.toString())
         return json
     }
-
 }
 
 class MeasurementDeserializer : JsonDeserializer<Measurement> {

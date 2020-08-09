@@ -33,7 +33,21 @@ class AquariumRepository(private val aquariumDAO: AquariumDAO) {
     fun getAquarium(aqID: Long) = aquariumDAO.getAquarium(aqID)
 
     suspend fun insert(aq: Aquarium): Long {
-        return aquariumDAO.insert(aq)
+        val aqID = aquariumDAO.insert(aq)
+        aq.aq_id = aqID
+        withContext(Dispatchers.IO) {
+            try {
+                val network = getNetworkService()
+                val result = network.insertAquarium(aq).execute()
+                if (result.isSuccessful) {
+                    Log.i("AquariumRepository", "Insertion successful")
+                } else {}
+
+            } catch (cause: Throwable) {
+                Log.e("AquariumRepository", cause.message.toString())
+            }
+        }
+        return aqID
     }
 
     suspend fun deleteAquarium(aqID: Long) {

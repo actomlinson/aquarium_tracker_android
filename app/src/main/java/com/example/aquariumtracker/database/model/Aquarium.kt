@@ -7,7 +7,7 @@ import java.util.*
 
 @Entity(tableName = "aquarium_table")
 data class Aquarium(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo (name = "aq_id") val aq_id: Long,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo (name = "aq_id") var aq_id: Long,
     @ColumnInfo val nickname: String,
     @ColumnInfo val size: Double,
     //@ColumnInfo val startDateStr: String,

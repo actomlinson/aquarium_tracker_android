@@ -18,7 +18,7 @@ interface ParameterDAO {
     suspend fun insert(param: Parameter)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(params: List<Parameter>)
+    suspend fun insertAll(params: List<Parameter>): List<Long>
 
     @Query("DELETE FROM parameter_table")
     suspend fun deleteAll()

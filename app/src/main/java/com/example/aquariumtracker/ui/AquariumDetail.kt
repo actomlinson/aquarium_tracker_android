@@ -133,7 +133,7 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
             aqViewModel.deleteAquarium(it)
         }
         Log.i("AquariumDeleteDialog", "Deleted")
-        //findNavController().navigate(R.id.action_aquariumFragment_to_nav_aquarium_list)
+        findNavController().navigate(R.id.action_aquariumFragment_to_nav_aquarium_list)
     }
 
 
