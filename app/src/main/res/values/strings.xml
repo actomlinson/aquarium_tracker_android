@@ -25,6 +25,7 @@
     <string name="aquarium_view_livestock">Livestock</string>
     <string name="aquarium_view_plant">Plants</string>
     <string name="aquarium_view_params">Parameters</string>
+    <string name="aquarium_view_reminder">Reminders</string>
 
     <string name="measure_nitrite">Nitrite</string>
     <string name="measure_nitrate">Nitrate</string>
@@ -37,5 +38,20 @@
 
     <string name="delete_message">You are about to delete this aquarium and all associated data. Are you sure?</string>
     <string name="delete_button_message">"Press %d times to delete."</string>
+    <string name="repeat_starting">Starting:</string>
+    <string name="repeat_every">Repeat every:</string>
+    <string name="repeat_days">days.</string>
+    <string name="option_repeatable">Repeatable</string>
+    <string name="reminder_name">Reminder Name</string>
+    <string name="notification">Notification</string>
+
+
+    <string-array name="time_choices">
+        <item>Days</item>
+        <item>Weeks</item>
+        <item>Months</item>
+        <item>Years</item>
+    </string-array>
+
 
 </resources>

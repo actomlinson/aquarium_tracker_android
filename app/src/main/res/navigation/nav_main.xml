@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_aquariumFragment_to_nav_aquarium_list"
             app:destination="@id/nav_aquarium_list" />
+        <action
+            android:id="@+id/action_aquariumFragment_to_reminderAdd"
+            app:destination="@id/reminderAdd" />
     </fragment>
     <fragment
         android:id="@+id/parameterList"
@@ -57,5 +60,13 @@
         <action
             android:id="@+id/action_aquariumSettings_to_nav_aquarium_list"
             app:destination="@id/nav_aquarium_list" />
+    </fragment>
+    <fragment
+        android:id="@+id/reminderAdd"
+        android:name="com.example.aquariumtracker.ui.ReminderAdd"
+        android:label="ReminderAdd" >
+        <action
+            android:id="@+id/action_reminderAdd_to_aquariumFragment"
+            app:destination="@id/aquariumFragment" />
     </fragment>
 </navigation>

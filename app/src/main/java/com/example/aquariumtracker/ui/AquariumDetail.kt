@@ -53,13 +53,13 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
                                   getString(R.string.menu_gallery),
                                   getString(R.string.aquarium_view_params),
                                   getString(R.string.aquarium_view_livestock),
-                                  getString(R.string.aquarium_view_plant))
+                                  getString(R.string.aquarium_view_reminder))
 
         val tabIconTable = listOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_wave, null),
                                   ResourcesCompat.getDrawable(resources, R.drawable.ic_camera, null),
                                   ResourcesCompat.getDrawable(resources, R.drawable.ic_chart, null),
                                   ResourcesCompat.getDrawable(resources, R.drawable.ic_fish, null),
-                                  ResourcesCompat.getDrawable(resources, R.drawable.ic_plant, null))
+                                  ResourcesCompat.getDrawable(resources, R.drawable.ic_calendar, null))
 
         tabLayout.getTabAt(0)?.text = tabTextTable[0]
         for (x in 0 until numTabs) {
@@ -108,6 +108,7 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
                     1 -> Log.i("tab 1", "")
                     2 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     3 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
+                    4 -> navController.navigate(R.id.action_aquariumFragment_to_reminderAdd)
                     else -> super.onOptionsItemSelected(item)
                 }
 
@@ -150,6 +151,7 @@ class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAda
 
         return when (position) {
             2 -> ParameterList()
+            4 -> ReminderList()
             else -> AquariumOverview()
         }
 

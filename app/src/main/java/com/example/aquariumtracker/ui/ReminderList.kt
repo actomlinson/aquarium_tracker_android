@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -27,14 +26,13 @@ class ReminderList: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return inflater.inflate(R.layout.fragment_reminder_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycle_measure)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rem_list)
         val viewAdapter = ReminderListAdapter(view.context.applicationContext)
         recyclerView.adapter = viewAdapter
         recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
@@ -66,9 +64,9 @@ class ReminderListAdapter internal constructor(
     private var reminders = emptyList<Reminder>()
 
     inner class ReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val measure1: TextView = itemView.findViewById(R.id.measure1)
-        val measure2: TextView = itemView.findViewById(R.id.measure2)
-        val paramNameTextView: TextView = itemView.findViewById(R.id.param_name)
+//        val measure1: TextView = itemView.findViewById(R.id.measure1)
+//        val measure2: TextView = itemView.findViewById(R.id.measure2)
+//        val paramNameTextView: TextView = itemView.findViewById(R.id.param_name)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
