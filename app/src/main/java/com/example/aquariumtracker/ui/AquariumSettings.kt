@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Aquarium
-import com.example.aquariumtracker.viewmodels.AquariumViewModel
-import com.example.aquariumtracker.viewmodels.ParameterViewModel
+import com.example.aquariumtracker.ui.viewmodel.AquariumViewModel
+import com.example.aquariumtracker.ui.viewmodel.ParameterViewModel
 import kotlinx.coroutines.launch
 
 class AquariumSettings : Fragment() {

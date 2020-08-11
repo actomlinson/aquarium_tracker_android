@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.ParameterWithMeasurements
-import com.example.aquariumtracker.viewmodels.AquariumSelector
-import com.example.aquariumtracker.viewmodels.MeasurementViewModel
-import com.example.aquariumtracker.viewmodels.ParameterViewModel
+import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
+import com.example.aquariumtracker.ui.viewmodel.MeasurementViewModel
+import com.example.aquariumtracker.ui.viewmodel.ParameterViewModel
 
 class ParameterList : Fragment() {
 

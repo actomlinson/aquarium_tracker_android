@@ -42,9 +42,9 @@ class ExampleInstrumentedTest {
     private lateinit var aquariumDAO: AquariumDAO
     private lateinit var parameterDAO: ParameterDAO
     private val calendar = Calendar.getInstance()
-    private val aqA = Aquarium(0, "A", 1.0, "-", calendar.timeInMillis)
-    private val aqB = Aquarium(0, "B", 10.0, "-", calendar.timeInMillis)
-    private val aqC = Aquarium(0, "C", 5.0, "-", calendar.timeInMillis)
+    private val aqA = Aquarium(0, "A", 1.0, 0)
+    private val aqB = Aquarium(0, "B", 10.0, 0)
+    private val aqC = Aquarium(0, "C", 5.0, 0)
     private lateinit var aqIDList: List<Long>
 
     @Before fun createDb() {

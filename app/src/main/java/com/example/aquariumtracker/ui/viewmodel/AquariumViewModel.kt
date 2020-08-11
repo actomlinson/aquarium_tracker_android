@@ -1,4 +1,4 @@
-package com.example.aquariumtracker.viewmodels
+package com.example.aquariumtracker.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

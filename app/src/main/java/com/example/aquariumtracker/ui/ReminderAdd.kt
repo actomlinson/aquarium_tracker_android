@@ -16,9 +16,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.AquariumReminderCrossRef
 import com.example.aquariumtracker.database.model.Reminder
-import com.example.aquariumtracker.viewmodels.AquariumSelector
-import com.example.aquariumtracker.viewmodels.CalendarViewModel
-import com.example.aquariumtracker.viewmodels.ReminderViewModel
+import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
+import com.example.aquariumtracker.ui.viewmodel.CalendarViewModel
+import com.example.aquariumtracker.ui.viewmodel.ReminderViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch

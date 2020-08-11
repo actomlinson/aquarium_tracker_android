@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Reminder
+import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
+import com.example.aquariumtracker.ui.viewmodel.ReminderViewModel
 import com.example.aquariumtracker.utilities.longtoTimeStr
-import com.example.aquariumtracker.viewmodels.AquariumSelector
-import com.example.aquariumtracker.viewmodels.ReminderViewModel
 
 class ReminderList: Fragment() {
 

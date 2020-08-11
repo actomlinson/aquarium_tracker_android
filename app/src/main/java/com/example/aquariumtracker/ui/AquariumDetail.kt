@@ -12,8 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.aquariumtracker.R
-import com.example.aquariumtracker.viewmodels.AquariumSelector
-import com.example.aquariumtracker.viewmodels.AquariumViewModel
+import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
+import com.example.aquariumtracker.ui.viewmodel.AquariumViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 

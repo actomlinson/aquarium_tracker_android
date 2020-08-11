@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Aquarium
-import com.example.aquariumtracker.viewmodels.AquariumSelector
-import com.example.aquariumtracker.viewmodels.AquariumViewModel
-import com.example.aquariumtracker.viewmodels.ParameterViewModel
+import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
+import com.example.aquariumtracker.ui.viewmodel.AquariumViewModel
+import com.example.aquariumtracker.ui.viewmodel.ParameterViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
