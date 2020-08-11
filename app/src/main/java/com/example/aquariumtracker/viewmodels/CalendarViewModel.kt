@@ -13,6 +13,10 @@ class CalendarViewModel(application: Application) : AndroidViewModel(application
         cal.set(Calendar.MINUTE, DEFAULT_TIME_MIN)
     }
 
+    fun getTimeinMillis(): Long {
+        return cal.timeInMillis
+    }
+
     fun getDateStr(): String {
         return DateFormat.getDateInstance().format(cal.time)
     }

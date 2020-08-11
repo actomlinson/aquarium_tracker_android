@@ -35,8 +35,6 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-//        var aq_ID = 0
-//        aqSelector.selected.observe(viewLifecycleOwner, Observer { i -> i?.let { aq_ID = i } })
         aqViewModel = ViewModelProvider(this).get(AquariumViewModel::class.java)
 
         val viewPager = view.findViewById<ViewPager2>(R.id.pager)

@@ -2,9 +2,12 @@ package com.example.aquariumtracker.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Reminder
+import com.example.aquariumtracker.utilities.longtoTimeStr
 import com.example.aquariumtracker.viewmodels.AquariumSelector
 import com.example.aquariumtracker.viewmodels.ReminderViewModel
 
@@ -41,10 +45,12 @@ class ReminderList: Fragment() {
 
         aqSelector.selected.observe(viewLifecycleOwner, Observer { aq ->
             aq?.let {id ->
-                reminderViewModel.allReminders.observe(
+                reminderViewModel.getRemindersForAquarium(id).observe(
                     viewLifecycleOwner, Observer { rems ->
                         rems?.let {
-                            viewAdapter.setReminders(it)
+                            viewAdapter.setReminders(it.reminders)
+                            Log.i("ReminderList", it.aq.nickname)
+                            Log.i("ReminderList", it.reminders.toString())
                         }
                     })
             }
@@ -64,18 +70,22 @@ class ReminderListAdapter internal constructor(
     private var reminders = emptyList<Reminder>()
 
     inner class ReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val measure1: TextView = itemView.findViewById(R.id.measure1)
-//        val measure2: TextView = itemView.findViewById(R.id.measure2)
-//        val paramNameTextView: TextView = itemView.findViewById(R.id.param_name)
+        val remNameCheck: CheckBox = itemView.findViewById(R.id.rem_name_check)
+        val remDate: TextView = itemView.findViewById(R.id.rem_date)
+        val remTime: TextView = itemView.findViewById(R.id.rem_time)
+        val remRepeat: TextView = itemView.findViewById(R.id.rem_repeat)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
-        val itemView = inflater.inflate(R.layout.recycle_measurement_table, parent, false)
+        val itemView = inflater.inflate(R.layout.recycle_reminder_card, parent, false)
         return ReminderViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
         val current = reminders[position]
+        holder.remNameCheck.text = current.name
+        holder.remDate.text = "need to calc next date"
+        holder.remTime.text = longtoTimeStr(current.notification_time)
     }
 
     internal fun setReminders(reminders: List<Reminder>) {

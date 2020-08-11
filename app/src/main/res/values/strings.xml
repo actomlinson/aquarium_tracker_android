@@ -42,8 +42,9 @@
     <string name="repeat_every">Repeat every:</string>
     <string name="repeat_days">days.</string>
     <string name="option_repeatable">Repeatable</string>
-    <string name="reminder_name">Reminder Name</string>
+    <string name="reminder_name">Reminder Name:</string>
     <string name="notification">Notification</string>
+    <string name="rem_input_error">Please double check inputs. Reminder was not saved.</string>
 
 
     <string-array name="time_choices">
