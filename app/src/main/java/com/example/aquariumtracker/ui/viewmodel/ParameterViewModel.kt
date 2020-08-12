@@ -1,4 +1,4 @@
-package com.example.aquariumtracker.viewmodels
+package com.example.aquariumtracker.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -22,7 +22,7 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
         allParams = repository.allParams
     }
 
-    fun createDefaultParametersForAquarium(aqID: Int) {
+    fun createDefaultParametersForAquarium(aqID: Long) {
         viewModelScope.launch {
             val paramDefaultNames = listOf<String>(
                 "Nitrate", "Nitrite", "Total Hardness (GH)",
@@ -34,18 +34,20 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
             )
             val defaultParams = (paramDefaultNames.indices).map { i ->
                 Parameter( p_order = i, aq_id = aqID, name = paramDefaultNames[i],
-                    units = paramDefaultUnits[i], param_id = i
+                    units = paramDefaultUnits[i], param_id = 0
                 )
             }
 
             for (i in defaultParams) {
-                Log.i("param name index", i.name)
+                Log.i("ParameterViewModel", i.name)
             }
             repository.insertAll(defaultParams)
         }
     }
 
-    fun getParametersForAquarium(aqID: Int) = repository.getParametersForAquarium(aqID)
+    fun getParametersForAquarium(aqID: Long) = repository.getParametersForAquarium(aqID)
+
+    fun getParametersWithMeasurements(aqID: Long) = repository.getParameterWithMeasurements(aqID)
 
     fun insert(param: Parameter) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(param)

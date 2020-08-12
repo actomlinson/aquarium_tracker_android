@@ -7,7 +7,7 @@
     android:fadeScrollbars="false"
     android:isScrollContainer="false"
     android:padding="@dimen/fab_margin"
-    tools:context=".AddMeasurement">
+    tools:context=".ui.AddMeasurement">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/param_list"
