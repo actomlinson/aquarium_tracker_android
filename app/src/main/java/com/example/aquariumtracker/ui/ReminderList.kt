@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.aquariumtracker.NotificationService
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Reminder
 import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
@@ -37,7 +39,7 @@ class ReminderList: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.rem_list)
-        val viewAdapter = ReminderListAdapter(view.context.applicationContext)
+        val viewAdapter = ReminderListAdapter(view.context)
         recyclerView.adapter = viewAdapter
         recyclerView.layoutManager = LinearLayoutManager(view.context.applicationContext)
 
@@ -55,21 +57,23 @@ class ReminderList: Fragment() {
                     })
             }
         })
+
+        val not = NotificationService(this.requireContext())
+        not.alarm()
     }
+
 }
 
 
-
-
-
 class ReminderListAdapter internal constructor(
-    context: Context
-) : RecyclerView.Adapter<ReminderListAdapter.ReminderViewHolder>() {
+    private val context: Context
+) : RecyclerView.Adapter<ReminderListAdapter.ReminderViewHolder>(), DialogEditDelete.DialogListener {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var reminders = emptyList<Reminder>()
 
     inner class ReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val remCard: CardView = itemView.findViewById(R.id.rem_list_card)
         val remNameCheck: CheckBox = itemView.findViewById(R.id.rem_name_check)
         val remDate: TextView = itemView.findViewById(R.id.rem_date)
         val remTime: TextView = itemView.findViewById(R.id.rem_time)
@@ -82,6 +86,12 @@ class ReminderListAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
+        holder.remCard.setOnLongClickListener {
+            val editDeleteDialog = DialogEditDelete(context, this, position)
+            editDeleteDialog.show()
+            Log.i("ReminderList", position.toString())
+            true
+        }
         val current = reminders[position]
         holder.remNameCheck.text = current.name
         holder.remDate.text = "need to calc next date"
@@ -95,5 +105,13 @@ class ReminderListAdapter internal constructor(
 
     override fun getItemCount(): Int {
         return reminders.size
+    }
+
+    override fun onDeleteConfirmation(position: Int) {
+        Log.i("ReminderList", "delete " + reminders[position].name)
+    }
+
+    override fun onEditConfirmation(position: Int) {
+        Log.i("ReminderList", "edit " + reminders[position].name)
     }
 }
