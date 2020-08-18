@@ -15,12 +15,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aquariumtracker.NotificationService
+import androidx.work.*
+import com.example.aquariumtracker.NotifyWorker
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Reminder
 import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.ReminderViewModel
 import com.example.aquariumtracker.utilities.longtoTimeStr
+import java.util.concurrent.TimeUnit
 
 class ReminderList: Fragment() {
 
@@ -57,9 +59,33 @@ class ReminderList: Fragment() {
                     })
             }
         })
+//
+//        WorkManager.getInstance(requireContext()).cancelAllWorkByTag("periodic")
+        Log.i("ReminderList", WorkManager.getInstance(requireContext()).getWorkInfosByTag("periodic").get().toString())
 
-        val not = NotificationService(this.requireContext())
-        not.alarm()
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(false)
+            .setRequiresCharging(false)
+            .build()
+
+        val perWorkRequest = PeriodicWorkRequestBuilder<NotifyWorker>(15, TimeUnit.MINUTES, PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
+            .setInitialDelay(20000, TimeUnit.MILLISECONDS)
+            .addTag("periodic")
+            .setConstraints(constraints)
+            .build()
+        WorkManager.getInstance(requireContext()).enqueue(perWorkRequest)
+
+
+        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<NotifyWorker>()
+            .setInitialDelay(20000, TimeUnit.MILLISECONDS)
+            .build()
+        WorkManager.getInstance(requireContext()).enqueue(workRequest)
+//
+//        val not = NotificationService(this.requireContext())
+//        not.alarm()
+
+//        val testIntent = Intent(this.requireContext(), NotificationLauncher::class.java)
+//        startActivity(testIntent)
     }
 
 }
