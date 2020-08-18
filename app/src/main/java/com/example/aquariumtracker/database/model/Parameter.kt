@@ -24,3 +24,11 @@ data class ParameterWithMeasurements(
         return measurements.sortedBy { m -> m.time }.reversed()
     }
 }
+
+data class ParameterList(
+    @PrimaryKey(autoGenerate = false) @ColumnInfo (name = "p_id") val p_id: Int,
+    @ColumnInfo val count: Int,
+    @ColumnInfo val next: Any?,
+    @ColumnInfo val previous: Any?,
+    @ColumnInfo val results: List<Parameter>
+)

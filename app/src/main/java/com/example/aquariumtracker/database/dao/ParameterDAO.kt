@@ -14,6 +14,9 @@ interface ParameterDAO {
     @Query("SELECT * from parameter_table ORDER BY aq_id, p_order ASC")
     fun getAllParametersList(): LiveData<List<Parameter>>
 
+    @Query("SELECT * from parameter_table WHERE param_id = :pID")
+    fun getParameterNonLive(pID: Long): Parameter
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(param: Parameter)
 

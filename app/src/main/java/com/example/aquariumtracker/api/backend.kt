@@ -4,10 +4,7 @@ import com.example.aquariumtracker.api.serializers.MeasurementDeserializer
 import com.example.aquariumtracker.api.serializers.MeasurementSerializer
 import com.example.aquariumtracker.api.serializers.ParameterDeserializer
 import com.example.aquariumtracker.api.serializers.ParameterSerializer
-import com.example.aquariumtracker.database.model.Aquarium
-import com.example.aquariumtracker.database.model.AquariumList
-import com.example.aquariumtracker.database.model.Measurement
-import com.example.aquariumtracker.database.model.Parameter
+import com.example.aquariumtracker.database.model.*
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -48,19 +45,44 @@ private val service: BackendService by lazy {
 fun getNetworkService() = service
 
 interface BackendService {
-    @GET("aquariums/")
-    fun getAquariumList(): Call<AquariumList>
-
+    // Aquariums
     @POST("aquariums/")
     fun insertAquarium(@Body aq: Aquarium): Call<Aquarium>
+
+    @GET("aquariums/")
+    fun getAquariumList(): Call<AquariumList>
 
     @DELETE("aquariums/{id}/")
     fun deleteAquarium(@Path("id") aqID: Long): Call<Aquarium>
 
+    // Parameters
     @POST("parameters/")
     fun insertParameter(@Body param: Parameter): Call<Parameter>
 
+    @GET("parameters/")
+    fun getAllParameters():Call<ParameterList>
+
+    @DELETE("parameters/{id}/")
+    fun deleteParameter(@Path("id") pID: Long): Call<Parameter>
+
+    // Measurements
     @POST("measurements/")
-    fun saveMeasurement(@Body measurement: Measurement): Call<Measurement>
+    fun insertMeasurement(@Body measurement: Measurement): Call<Measurement>
+
+    @GET("measurements/")
+    fun getAllMeasurements():Call<MeasurementList>
+
+    @DELETE("measurements/{id}/")
+    fun deleteMeasurement(@Path("id") mID: Long): Call<Measurement>
+
+    // Reminders
+    @POST("reminders/")
+    fun insertReminder(@Body reminder: Reminder): Call<Reminder>
+
+    @GET("reminders/")
+    fun getAllReminders():Call<ReminderList>
+
+    @DELETE("reminders/{id}/")
+    fun deleteReminder(@Path("id") rID: Long): Call<Reminder>
 }
 

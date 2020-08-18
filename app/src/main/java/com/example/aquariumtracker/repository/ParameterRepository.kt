@@ -1,15 +1,14 @@
 package com.example.aquariumtracker.repository
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.LiveData
-import com.example.aquariumtracker.api.getNetworkService
+import androidx.work.WorkManager
+import com.example.aquariumtracker.api.ApiWorker
 import com.example.aquariumtracker.database.dao.ParameterDAO
 import com.example.aquariumtracker.database.model.Parameter
 import com.example.aquariumtracker.database.model.ParameterWithMeasurements
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class ParameterRepository(private val parameterDAO: ParameterDAO) {
+class ParameterRepository(private val context: Context, private val parameterDAO: ParameterDAO) {
 
     fun getParametersForAquarium(aqID: Long) = parameterDAO.getParametersForAquarium(aqID)
 
@@ -26,20 +25,9 @@ class ParameterRepository(private val parameterDAO: ParameterDAO) {
 
     suspend fun insertAll(params: List<Parameter>) {
         val paramIDs = parameterDAO.insertAll(params)
-
-        withContext(Dispatchers.IO) {
-            try {
-                val network = getNetworkService()
-                for (p in params.indices) {
-                    params[p].param_id = paramIDs[p]
-                    val result = network.insertParameter(params[p]).execute()
-                    if (result.isSuccessful) {
-                        Log.i("ParameterRepository", "Insertion successful")
-                    } else {}
-                }
-            } catch (cause: Throwable) {
-                Log.e("ParameterRepository", cause.message.toString())
-            }
+        for (p in paramIDs) {
+            WorkManager.getInstance(context).enqueue(
+                ApiWorker.getWorkRequest(p, "INSERT", "PARAMETER"))
         }
     }
 

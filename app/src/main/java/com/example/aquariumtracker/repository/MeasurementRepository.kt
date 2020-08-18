@@ -20,7 +20,7 @@ class MeasurementRepository(private val measurementDAO: MeasurementDAO) {
         withContext(Dispatchers.IO) {
             try {
                 val network = getNetworkService()
-                val result = network.saveMeasurement(m).execute()
+                val result = network.insertMeasurement(m).execute()
                 if (result.isSuccessful) {
                     Log.i("MeasurementRepository", "Success")
                 } else {

@@ -13,6 +13,9 @@ interface AquariumDAO {
     @Query("SELECT * from aquarium_table WHERE aq_id = :aqID")
     fun getAquarium(aqID: Long): LiveData<Aquarium>
 
+    @Query("SELECT * from aquarium_table WHERE aq_id = :aqID")
+    fun getAquariumNonLive(aqID: Long): Aquarium
+
     @Query("SELECT * from aquarium_table ORDER BY aq_id ASC")
     fun getAquariumList(): LiveData<List<Aquarium>>
 

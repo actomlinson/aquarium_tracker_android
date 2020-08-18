@@ -18,7 +18,7 @@ class ParameterViewModel(application: Application) : AndroidViewModel(applicatio
 
     init {
         val parameterDAO = AppDatabase.getDatabase(application, viewModelScope).parameterDao()
-        repository = ParameterRepository(parameterDAO)
+        repository = ParameterRepository(application, parameterDAO)
         allParams = repository.allParams
     }
 

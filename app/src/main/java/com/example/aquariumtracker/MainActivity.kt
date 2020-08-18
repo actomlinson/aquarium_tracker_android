@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.setupWithNavController(navController, appBarConfiguration)
 
+        val notificationService = NotificationService(applicationContext)
+        notificationService.createNotificationChannel()
     }
 
 

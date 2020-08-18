@@ -16,3 +16,10 @@ data class Measurement(
     @ColumnInfo val time: Long
 )
 
+data class MeasurementList(
+    @PrimaryKey(autoGenerate = false) @ColumnInfo (name = "m_id") val m_id: Int,
+    @ColumnInfo val count: Int,
+    @ColumnInfo val next: Any?,
+    @ColumnInfo val previous: Any?,
+    @ColumnInfo val results: List<Measurement>
+)

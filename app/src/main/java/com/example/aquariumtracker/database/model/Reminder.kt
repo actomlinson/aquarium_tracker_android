@@ -31,3 +31,11 @@ data class AquariumWithReminders(
     )
     val reminders: List<Reminder>
 )
+
+data class ReminderList(
+    @PrimaryKey(autoGenerate = false) @ColumnInfo (name = "r_id") val r_id: Int,
+    @ColumnInfo val count: Int,
+    @ColumnInfo val next: Any?,
+    @ColumnInfo val previous: Any?,
+    @ColumnInfo val results: List<Reminder>
+)

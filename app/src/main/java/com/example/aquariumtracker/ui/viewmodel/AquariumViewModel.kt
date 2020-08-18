@@ -18,7 +18,7 @@ class AquariumViewModel(application: Application) : AndroidViewModel(application
 
     init {
         val aquariumDAO = AppDatabase.getDatabase(application, viewModelScope).aquariumDao()
-        repository = AquariumRepository(aquariumDAO)
+        repository = AquariumRepository(application, aquariumDAO)
         allAquariums = repository.allAquariums
     }
 

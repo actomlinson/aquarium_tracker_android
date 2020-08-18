@@ -71,6 +71,11 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        fun getDatabase(): AppDatabase? {
+            return INSTANCE
+        }
+
+
         fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
