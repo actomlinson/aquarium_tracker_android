@@ -1,11 +1,9 @@
 package com.example.aquariumtracker.database.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.aquariumtracker.database.model.Aquarium
+import com.example.aquariumtracker.database.model.AquariumWithImages
 
 @Dao
 interface AquariumDAO {
@@ -30,4 +28,12 @@ interface AquariumDAO {
 
     @Query("DELETE FROM aquarium_table WHERE aq_id = :aqID")
     suspend fun deleteAquarium(aqID: Long)
+
+    @Transaction
+    @Query("SELECT * FROM aquarium_table WHERE aq_id = :aqID")
+    fun getAquariumWithImages(aqID: Long): LiveData<AquariumWithImages>
+
+    @Transaction
+    @Query("SELECT * FROM aquarium_table")
+    fun getAquariumsWithImages(): LiveData<List<AquariumWithImages>>
 }

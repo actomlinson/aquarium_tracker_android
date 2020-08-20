@@ -36,6 +36,10 @@ class AquariumRepository(private val context: Context, private val aquariumDAO: 
 
     fun getAquarium(aqID: Long) = aquariumDAO.getAquarium(aqID)
 
+    fun getAquariumWithImages(aqID: Long) = aquariumDAO.getAquariumWithImages(aqID)
+
+    fun getAquariumsWithImages() = aquariumDAO.getAquariumsWithImages()
+
     suspend fun insert(aq: Aquarium): Long {
         val aqID = aquariumDAO.insert(aq)
         WorkManager.getInstance(context).enqueue(

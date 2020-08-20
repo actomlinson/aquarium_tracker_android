@@ -39,4 +39,7 @@ class AquariumViewModel(application: Application) : AndroidViewModel(application
             repository.deleteAquarium(aqID)
         }
     }
+    fun getAquariumWithImages(aqID: Long) = repository.getAquariumWithImages(aqID)
+    fun getAquariumsWithImages() = repository.getAquariumsWithImages()
+
 }
