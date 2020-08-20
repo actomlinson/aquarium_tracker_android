@@ -110,6 +110,7 @@ class AquariumListAdapter internal constructor(
 //        val date = Calendar.getInstance().apply { current.startDateStr }
 
         holder.aqDateTextView.text = current.startDate.toString()
+
         holder.aqCard.setOnClickListener {
             aqSelector.select(current.aq_id.toLong())
             val navController = it.findNavController()
