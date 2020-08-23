@@ -8,4 +8,6 @@ class ImageRepository(private val context: Context, private val imageDAO: ImageD
     fun getImagesForAquarium(aqID: Long) = imageDAO.getImagesForAquarium(aqID)
     fun getAllImages() = imageDAO.getAllImages()
     suspend fun insert(im: Image) = imageDAO.insert(im)
+    fun getImageByURI(uri: String) = imageDAO.getImageByURI(uri)
+    suspend fun deleteImage(imID: Long) = imageDAO.deleteImage(imID)
 }

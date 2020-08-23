@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.aquariumtracker.database.AppDatabase
 import com.example.aquariumtracker.database.model.Image
 import com.example.aquariumtracker.repository.ImageRepository
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ImageViewModel(application: Application) : AndroidViewModel(application) {
@@ -28,6 +29,13 @@ class ImageViewModel(application: Application) : AndroidViewModel(application) {
     suspend fun insert(im: Image): Long {
         return withContext(viewModelScope.coroutineContext) {
             repository.insert(im)
+        }
+    }
+
+    fun getImageByURI(uri: String) = repository.getImageByURI(uri)
+    fun deleteImage(imID: Long) {
+        viewModelScope.launch {
+            repository.deleteImage(imID)
         }
     }
 }

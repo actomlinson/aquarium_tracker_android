@@ -1,8 +1,10 @@
 package com.example.aquariumtracker.ui
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,19 +16,24 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Image
 import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.ImageViewModel
+import kotlin.concurrent.thread
 
 private const val NUM_COLUMNS = 2
+lateinit var imageViewModel: ImageViewModel// by activityViewModels()
 
 class GalleryDetail: Fragment() {
-    private lateinit var imageViewModel: ImageViewModel// by activityViewModels()
     private val aqSelector: AquariumSelector by activityViewModels()
 
     override fun onCreateView(
@@ -52,11 +59,9 @@ class GalleryDetail: Fragment() {
             imageViewModel.getImagesForAquarium(aq).observe(viewLifecycleOwner, Observer {
                 viewAdapter.setAquariums(it)
             })
-
         })
     }
 }
-
 
 class GalleryListAdapter internal constructor(
     private val context: Context,
@@ -78,9 +83,11 @@ class GalleryListAdapter internal constructor(
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
         val current = images[position]
         holder.image.layoutParams.height = layoutManager.width / NUM_COLUMNS
+
         Glide
             .with(context)
             .load(Uri.parse(current.uri))
+            .listener(GlideRequestListener())
             .transform(MultiTransformation(CenterCrop(), FitCenter(), CenterInside()))
             .into(holder.image)
     }
@@ -95,6 +102,34 @@ class GalleryListAdapter internal constructor(
     }
 }
 
+class GlideRequestListener : RequestListener<Drawable> {
+    override fun onLoadFailed(
+        e: GlideException?,
+        model: Any?,
+        target: Target<Drawable>?,
+        isFirstResource: Boolean
+    ): Boolean {
+        model?.let {
+            thread {
+                val im = imageViewModel.getImageByURI(model.toString())
+                im?.let {
+                    imageViewModel.deleteImage(im.im_id)
+                }
+            Log.i("GlideRequest", "Image not found, attempted to delete " +
+                    "the reference in Aquarium Tracker")
+            }
+        }
+        return false
+    }
 
-
-
+    override fun onResourceReady(
+        resource: Drawable?,
+        model: Any?,
+        target: Target<Drawable>?,
+        dataSource: DataSource?,
+        isFirstResource: Boolean
+    ): Boolean {
+        Log.i("GlideRequestListener", "onResourceReady")
+        return false
+    }
+}

@@ -17,4 +17,10 @@ interface ImageDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(im: Image): Long
+
+    @Query("SELECT * from image_table WHERE uri = :uri")
+    fun getImageByURI(uri: String): Image?
+
+    @Query("DELETE FROM image_table WHERE im_id = :imID")
+    suspend fun deleteImage(imID: Long)
 }
