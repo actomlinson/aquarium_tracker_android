@@ -2,8 +2,11 @@ package com.example.aquariumtracker.ui
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.ContentValues
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
@@ -23,6 +26,7 @@ import com.example.aquariumtracker.ui.viewmodel.ImageViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
+import java.util.*
 
 class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
 
@@ -83,13 +87,6 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
             }
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-
-//        val fab = view.findViewById<FloatingActionButton>(R.id.fab)
-//        fab.setOnClickListener {
-//            Log.i("fab", "aquarium")
-//            findNavController().navigate(R.id.action_aquariumFragment_to_addMeasurement)
-//        }
-
     }
 
     override fun onDestroyView() {
@@ -113,7 +110,7 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
 
                 when (tabLayout?.selectedTabPosition) {
                     0 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
-                    1 -> getImagesFromGallery()
+                    1 -> dispatchTakePictureIntent()//getImagesFromGallery()
                     2 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     3 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     4 -> navController.navigate(R.id.action_aquariumFragment_to_reminderAdd)
@@ -138,6 +135,7 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
 
     companion object {
         private const val REQUEST_GET_IMAGES = 1
+        private const val REQUEST_TAKE_PHOTO = 2
     }
 
     /**
@@ -157,14 +155,35 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
         }
     }
 
+    private fun getGalleryUri(): Uri? {
+        // Add a specific media item.
+        val resolver = requireContext().applicationContext.contentResolver
+        val photoCollection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        val cal = Calendar.getInstance()
+        val newPhotoDetails = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "AquariumTracker/" + cal.timeInMillis.toString())
+        }
+        return resolver.insert(photoCollection, newPhotoDetails)
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val photoURI = getGalleryUri()
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+        takePictureIntent.resolveActivity(requireContext().packageManager)?.also {
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
+        }
+        aqSelector.selected.observe(viewLifecycleOwner, Observer {
+            lifecycleScope.launch {
+                imageViewModel.insert(Image(im_id = 0, aq_id = 1, uri = photoURI.toString()))
+            }
+        })
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_GET_IMAGES && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                Log.i("AquariumDetail", data.data.toString())
-                Log.i("AquariumDetail", data.clipData.toString())
-                Log.i("AquariumDetail", data.extras.toString())
-                Log.i("AquariumDetail", data.toString())
                 val count = data.clipData?.itemCount
                 if (count != null && data.clipData != null) {
                     for (i in 0 until count) {
@@ -174,9 +193,6 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
                                 imageViewModel.insert(Image(im_id = 0, aq_id = it, uri = uri.toString()))
                             }
                         })
-//                        val uriFromParts = Uri.fromParts(uri?.scheme, uri?.schemeSpecificPart, uri?.fragment)
-//                        imageViewModel.setUri(Uri.parse(uri.toString()))
-//                        Log.i("Items", (Uri.parse(uri.toString()) == uri).toString())
                     }
                 }
             }
@@ -191,10 +207,6 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
         Log.i("AquariumDeleteDialog", "Deleted")
         findNavController().navigate(R.id.action_aquariumFragment_to_nav_aquarium_list)
     }
-
-
-
-
 }
 
 class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAdapter(fragment) {

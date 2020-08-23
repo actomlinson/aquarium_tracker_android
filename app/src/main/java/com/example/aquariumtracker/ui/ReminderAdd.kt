@@ -2,12 +2,10 @@ package com.example.aquariumtracker.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -67,19 +65,16 @@ class ReminderAdd: Fragment() {
         date.text = calVM.getDateStr()
 
         dateSetButton.setOnClickListener {
-            @RequiresApi(Build.VERSION_CODES.N)
-            if (this.context != null) {
-                val tpd = DatePickerDialog(this.context!!,
-                    DatePickerDialog.OnDateSetListener { _, yr, mon, day ->
-                        calVM.set(yr, mon, day)
-                        date.text = calVM.getDateStr()
-                    },
-                    calVM.getYr(),
-                    calVM.getMon(),
-                    calVM.getDay()
-                )
-                tpd.show()
-            }
+            val tpd = DatePickerDialog(this.requireContext(),
+                { _, yr, mon, day ->
+                    calVM.set(yr, mon, day)
+                    date.text = calVM.getDateStr()
+                },
+                calVM.getYr(),
+                calVM.getMon(),
+                calVM.getDay()
+            )
+            tpd.show()
         }
 
         val time = view.findViewById<TextView>(R.id.notification_time)
@@ -87,18 +82,17 @@ class ReminderAdd: Fragment() {
         time.text = calVM.getTimeStr()
 
         timeButton.setOnClickListener {
-            if (this.context != null) {
-                val tpd = TimePickerDialog(this.requireContext(),
-                    TimePickerDialog.OnTimeSetListener { _, hr, min ->
-                        calVM.set(hr, min)
-                        time.text = calVM.getTimeStr()
-                    },
-                    calVM.getHr(),
-                    calVM.getMin(),
-                    false
-                )
-                tpd.show()
-            }
+            val tpd = TimePickerDialog(this.requireContext(),
+                { _, hr, min ->
+                    calVM.set(hr, min)
+                    time.text = calVM.getTimeStr()
+                },
+                calVM.getHr(),
+                calVM.getMin(),
+                false
+            )
+            tpd.show()
+
         }
     }
 

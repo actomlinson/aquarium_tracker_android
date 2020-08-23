@@ -123,10 +123,9 @@ class ParameterListAdapter internal constructor(
     var parameters = emptyList<Parameter>()
     var texts: HashMap<Int, EditText> = HashMap()
 
-    inner class ParameterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ParameterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val unitsTextView: TextView = itemView.findViewById(R.id.units)
         val paramNameTextView: TextView = itemView.findViewById(R.id.param_name)
-        val paramIDStorage: TextView = itemView.findViewById(R.id.param_id)
         val paramInput: EditText = itemView.findViewById(R.id.param_input)
     }
 
@@ -138,8 +137,7 @@ class ParameterListAdapter internal constructor(
     override fun onBindViewHolder(holder: ParameterViewHolder, position: Int) {
         texts[position] = holder.paramInput // save this to be accessed later when saving measurements
         val current = parameters[position]
-        holder.paramIDStorage.text = current.param_id.toString()
-        holder.unitsTextView.text = current.param_id.toString() // current.units
+        holder.unitsTextView.text = current.units
         holder.paramNameTextView.text = current.name
     }
 

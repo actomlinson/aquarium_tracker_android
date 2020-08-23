@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,12 +20,14 @@ import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Image
+import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.ImageViewModel
 
 private const val NUM_COLUMNS = 2
 
 class GalleryDetail: Fragment() {
     private lateinit var imageViewModel: ImageViewModel// by activityViewModels()
+    private val aqSelector: AquariumSelector by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +48,11 @@ class GalleryDetail: Fragment() {
         recyclerView.layoutManager = layoutManager
 
         imageViewModel = ViewModelProvider(this).get(ImageViewModel::class.java)
-        imageViewModel.getImagesForAquarium(1).observe(viewLifecycleOwner, Observer {
-            viewAdapter.setAquariums(it)
+        aqSelector.selected.observe(viewLifecycleOwner, Observer { aq ->
+            imageViewModel.getImagesForAquarium(aq).observe(viewLifecycleOwner, Observer {
+                viewAdapter.setAquariums(it)
+            })
+
         })
     }
 }

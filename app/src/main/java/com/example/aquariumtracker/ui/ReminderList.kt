@@ -15,14 +15,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.*
-import com.example.aquariumtracker.NotifyWorker
+import androidx.work.WorkManager
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Reminder
 import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.ReminderViewModel
 import com.example.aquariumtracker.utilities.longtoTimeStr
-import java.util.concurrent.TimeUnit
 
 class ReminderList: Fragment() {
 
@@ -60,26 +58,26 @@ class ReminderList: Fragment() {
             }
         })
 //
-//        WorkManager.getInstance(requireContext()).cancelAllWorkByTag("periodic")
+        WorkManager.getInstance(requireContext()).cancelAllWorkByTag("periodic")
         Log.i("ReminderList", WorkManager.getInstance(requireContext()).getWorkInfosByTag("periodic").get().toString())
 
-        val constraints = Constraints.Builder()
-            .setRequiresBatteryNotLow(false)
-            .setRequiresCharging(false)
-            .build()
-
-        val perWorkRequest = PeriodicWorkRequestBuilder<NotifyWorker>(15, TimeUnit.MINUTES, PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
-            .setInitialDelay(20000, TimeUnit.MILLISECONDS)
-            .addTag("periodic")
-            .setConstraints(constraints)
-            .build()
-        WorkManager.getInstance(requireContext()).enqueue(perWorkRequest)
-
-
-        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<NotifyWorker>()
-            .setInitialDelay(20000, TimeUnit.MILLISECONDS)
-            .build()
-        WorkManager.getInstance(requireContext()).enqueue(workRequest)
+//        val constraints = Constraints.Builder()
+//            .setRequiresBatteryNotLow(false)
+//            .setRequiresCharging(false)
+//            .build()
+//
+//        val perWorkRequest = PeriodicWorkRequestBuilder<NotifyWorker>(15, TimeUnit.MINUTES, PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS, TimeUnit.MILLISECONDS)
+//            .setInitialDelay(20000, TimeUnit.MILLISECONDS)
+//            .addTag("periodic")
+//            .setConstraints(constraints)
+//            .build()
+//        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(perWorkRequest)
+//
+//
+//        val workRequest: WorkRequest = OneTimeWorkRequestBuilder<NotifyWorker>()
+//            .setInitialDelay(20000, TimeUnit.MILLISECONDS)
+//            .build()
+//        WorkManager.getInstance(requireContext()).enqueue(workRequest)
 //
 //        val not = NotificationService(this.requireContext())
 //        not.alarm()
@@ -93,12 +91,12 @@ class ReminderList: Fragment() {
 
 class ReminderListAdapter internal constructor(
     private val context: Context
-) : RecyclerView.Adapter<ReminderListAdapter.ReminderViewHolder>(), DialogEditDelete.DialogListener {
+) : RecyclerView.Adapter<ReminderListAdapter.ReminderViewHolder>(), EditDeleteDialog.DialogListener {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var reminders = emptyList<Reminder>()
 
-    inner class ReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val remCard: CardView = itemView.findViewById(R.id.rem_list_card)
         val remNameCheck: CheckBox = itemView.findViewById(R.id.rem_name_check)
         val remDate: TextView = itemView.findViewById(R.id.rem_date)
@@ -113,7 +111,7 @@ class ReminderListAdapter internal constructor(
 
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
         holder.remCard.setOnLongClickListener {
-            val editDeleteDialog = DialogEditDelete(context, this, position)
+            val editDeleteDialog = EditDeleteDialog(context, this, position)
             editDeleteDialog.show()
             Log.i("ReminderList", position.toString())
             true
@@ -133,11 +131,11 @@ class ReminderListAdapter internal constructor(
         return reminders.size
     }
 
-    override fun onDeleteConfirmation(position: Int) {
-        Log.i("ReminderList", "delete " + reminders[position].name)
+    override fun onDeleteConfirmation(pos: Int) {
+        Log.i("ReminderList", "delete " + reminders[pos].name)
     }
 
-    override fun onEditConfirmation(position: Int) {
-        Log.i("ReminderList", "edit " + reminders[position].name)
+    override fun onEditConfirmation(pos: Int) {
+        Log.i("ReminderList", "edit " + reminders[pos].name)
     }
 }
