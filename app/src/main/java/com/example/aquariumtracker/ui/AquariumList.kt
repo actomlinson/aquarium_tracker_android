@@ -24,7 +24,6 @@ import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.AquariumViewModel
 import com.example.aquariumtracker.ui.viewmodel.ImageViewModel
 import com.example.aquariumtracker.ui.viewmodel.ParameterViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class AquariumList : Fragment() {
@@ -65,10 +64,10 @@ class AquariumList : Fragment() {
 //            }
 //        })
 
-        val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
-        fab.setOnClickListener {
-            aqViewModel.getAquariumsFromNetwork()
-        }
+//        val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+//        fab.setOnClickListener {
+//            aqViewModel.getAquariumsFromNetwork()
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
