@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
 import com.example.aquariumtracker.R
+import com.example.aquariumtracker.SelectableListAdapter
 import com.example.aquariumtracker.database.model.Reminder
 import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.ReminderViewModel
@@ -89,10 +90,14 @@ class ReminderList: Fragment() {
 }
 
 
+
+//class ReminderListAdapter internal constructor(
+//    private val context: Context
+//) : RecyclerView.Adapter<ReminderListAdapter.ReminderViewHolder>(), EditDeleteDialog.DialogListener {
+
 class ReminderListAdapter internal constructor(
     private val context: Context
-) : RecyclerView.Adapter<ReminderListAdapter.ReminderViewHolder>(), EditDeleteDialog.DialogListener {
-
+) : SelectableListAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var reminders = emptyList<Reminder>()
 
@@ -109,7 +114,8 @@ class ReminderListAdapter internal constructor(
         return ReminderViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val holder = holder as ReminderViewHolder
         holder.remCard.setOnLongClickListener {
             val editDeleteDialog = EditDeleteDialog(context, this, position)
             editDeleteDialog.show()

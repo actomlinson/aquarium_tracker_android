@@ -28,7 +28,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 import java.util.*
 
-class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
+class AquariumDetail : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
 
     private val numTabs : Int = 5
     private val aqSelector: AquariumSelector by activityViewModels()
@@ -87,10 +87,6 @@ class AquariumFragment : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
             }
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -220,7 +216,7 @@ class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAda
 
         return when (position) {
             1 -> GalleryDetail()
-            2 -> ParameterList()
+            2 -> ParameterChart()
             4 -> ReminderList()
             else -> AquariumOverview()
         }

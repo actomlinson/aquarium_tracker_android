@@ -34,7 +34,7 @@ class GallerySmallDetail: Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.imagerv)
         val layoutManager = GridLayoutManager(view.context.applicationContext, NUM_COLUMNS)
-        val viewAdapter = GalleryListAdapter(view.context.applicationContext, layoutManager)
+        val viewAdapter = GalleryListAdapter(view.context.applicationContext, layoutManager, true)
         recyclerView.adapter = viewAdapter
         recyclerView.layoutManager = layoutManager
 

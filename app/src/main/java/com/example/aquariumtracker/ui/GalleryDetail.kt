@@ -25,6 +25,7 @@ import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.aquariumtracker.R
+import com.example.aquariumtracker.SelectableListAdapter
 import com.example.aquariumtracker.database.model.Image
 import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.ImageViewModel
@@ -50,7 +51,7 @@ class GalleryDetail: Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.imagerv)
         val layoutManager = GridLayoutManager(view.context.applicationContext, NUM_COLUMNS)
-        val viewAdapter = GalleryListAdapter(view.context.applicationContext, layoutManager)
+        val viewAdapter = GalleryListAdapter(view.context, layoutManager, false)
         recyclerView.adapter = viewAdapter
         recyclerView.layoutManager = layoutManager
 
@@ -65,9 +66,10 @@ class GalleryDetail: Fragment() {
 
 class GalleryListAdapter internal constructor(
     private val context: Context,
-    private val layoutManager: GridLayoutManager
-) : RecyclerView.Adapter<GalleryListAdapter.GalleryViewHolder>() {
-
+    private val layoutManager: GridLayoutManager,
+    private val shortForm: Boolean
+//) : RecyclerView.Adapter<GalleryListAdapter.GalleryViewHolder>() {
+) : SelectableListAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var images = emptyList<Image>()
 
@@ -80,7 +82,8 @@ class GalleryListAdapter internal constructor(
         return GalleryViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val holder = holder as GalleryViewHolder
         val current = images[position]
         holder.image.layoutParams.height = layoutManager.width / NUM_COLUMNS
 
@@ -90,6 +93,14 @@ class GalleryListAdapter internal constructor(
             .listener(GlideRequestListener())
             .transform(MultiTransformation(CenterCrop(), FitCenter(), CenterInside()))
             .into(holder.image)
+
+        if (!shortForm) {
+            holder.image.setOnLongClickListener {
+                val editDeleteDialog = EditDeleteDialog(context, this, position)
+                editDeleteDialog.show()
+                true
+            }
+        }
     }
 
     internal fun setAquariums(images: List<Image>) {
@@ -99,6 +110,14 @@ class GalleryListAdapter internal constructor(
 
     override fun getItemCount(): Int {
         return images.size
+    }
+
+    override fun onDeleteConfirmation(pos: Int) {
+
+    }
+
+    override fun onEditConfirmation(pos: Int) {
+
     }
 }
 

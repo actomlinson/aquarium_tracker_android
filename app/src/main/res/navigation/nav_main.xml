@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/aquariumFragment"
-        android:name="com.example.aquariumtracker.ui.AquariumFragment"
+        android:name="com.example.aquariumtracker.ui.AquariumDetail"
         android:label="{aq_name}"
         tools:layout="@layout/fragment_aquarium_detail" >
 
