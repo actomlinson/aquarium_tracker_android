@@ -35,6 +35,7 @@ class ReminderViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun getRemindersForAquarium(aqID: Long) = repository.getRemindersForAquarium(aqID)
-
-
+    suspend fun deleteReminder(remID: Long) = repository.deleteReminder(remID)
+    suspend fun deleteRelation(remID: Long) = repository.deleteRelation(remID)
+    suspend fun updateReminder(rem: Reminder) = repository.updateReminder(rem)
 }

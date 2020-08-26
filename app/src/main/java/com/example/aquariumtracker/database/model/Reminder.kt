@@ -1,6 +1,7 @@
 package com.example.aquariumtracker.database.model
 
 import androidx.room.*
+import java.text.DateFormat
 import java.util.*
 
 @Entity(tableName = "reminder_table")
@@ -11,9 +12,24 @@ data class Reminder(
     @ColumnInfo val repeat_time: Int = 7,
     @ColumnInfo val start_time: Long = Calendar.getInstance().timeInMillis,
     @ColumnInfo val notify: Boolean = true,
-    @ColumnInfo val notification_time: Long = 0
-//    @ColumnInfo var completed: Boolean = false
-)
+    @ColumnInfo val notification_time: Long = 0,
+    @ColumnInfo var completed: Boolean = false,
+    @ColumnInfo var completedOn: Long = 0
+) {
+    fun nextReminderStr(): String {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = start_time
+        cal.add(Calendar.DAY_OF_MONTH, repeat_time)
+        return DateFormat.getDateInstance().format(cal.time)
+    }
+
+    fun nextReminderCal(): Calendar {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = start_time
+        cal.add(Calendar.DAY_OF_MONTH, repeat_time)
+        return cal
+    }
+}
 
 @Entity(primaryKeys = ["aq_id", "reminder_id"])
 data class AquariumReminderCrossRef(
