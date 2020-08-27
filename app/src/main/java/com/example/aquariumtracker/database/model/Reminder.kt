@@ -9,25 +9,32 @@ data class Reminder(
     @PrimaryKey(autoGenerate = true) val reminder_id: Long,
     @ColumnInfo val name: String,
     @ColumnInfo val repeatable: Boolean = true,
-    @ColumnInfo val repeat_time: Int = 7,
+    @ColumnInfo val repeat_time: Long? = 7,
     @ColumnInfo val start_time: Long = Calendar.getInstance().timeInMillis,
     @ColumnInfo val notify: Boolean = true,
-    @ColumnInfo val notification_time: Long = 0,
+    @ColumnInfo val notification_time: Long? = 0,
     @ColumnInfo var completed: Boolean = false,
     @ColumnInfo var completedOn: Long = 0
 ) {
     fun nextReminderStr(): String {
+        val addition = repeat_time ?: 0
         val cal = Calendar.getInstance()
         cal.timeInMillis = start_time
-        cal.add(Calendar.DAY_OF_MONTH, repeat_time)
+        cal.add(Calendar.DAY_OF_MONTH, addition.toInt())
         return DateFormat.getDateInstance().format(cal.time)
     }
 
     fun nextReminderCal(): Calendar {
+        val addition = repeat_time ?: 0
         val cal = Calendar.getInstance()
         cal.timeInMillis = start_time
-        cal.add(Calendar.DAY_OF_MONTH, repeat_time)
+        cal.add(Calendar.DAY_OF_MONTH, addition.toInt())
         return cal
+    }
+
+    fun overDue(): Boolean {
+        val cal = Calendar.getInstance()
+        return cal.timeInMillis > start_time
     }
 }
 

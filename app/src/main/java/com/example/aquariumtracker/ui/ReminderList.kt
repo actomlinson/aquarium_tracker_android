@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkManager
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.SelectableListAdapter
 import com.example.aquariumtracker.database.model.AquariumReminderCrossRef
@@ -58,6 +59,14 @@ class ReminderList : Fragment(), AdapterOptionsListener {
                             viewAdapter.setReminders(
                                 it.reminders.sortedBy { elem -> elem.completed }
                             )
+
+                            val wm = WorkManager.getInstance(requireContext())
+                            for (r in it.reminders) {
+                                Log.i(
+                                    "ReminderList",
+                                    wm.getWorkInfosByTag(r.reminder_id.toString()).get().toString()
+                                )
+                            }
                         }
                     })
             }
@@ -67,19 +76,24 @@ class ReminderList : Fragment(), AdapterOptionsListener {
     override fun markReminderCompleted(rem: Reminder) {
         aqSelector.selected.observe(viewLifecycleOwner, Observer { aqID ->
             viewLifecycleOwner.lifecycleScope.launch {
-                val remID = remVM.insert(
-                    Reminder(
-                        reminder_id = 0,
-                        name = rem.name,
-                        repeat_time = rem.repeat_time,
-                        repeatable = rem.repeatable,
-                        start_time = rem.nextReminderCal().timeInMillis,
-                        notification_time = rem.notification_time,
-                        notify = rem.notify
-                    )
-                )
-                val remaqXref = AquariumReminderCrossRef(aqID, remID)
-                remVM.insertRelation(remaqXref)
+                if (rem.repeatable && rem.repeat_time != null) {
+                    val nextRem = rem.nextReminderCal().timeInMillis
+                    if (nextRem != null) {
+                        val remID = remVM.insert(
+                            Reminder(
+                                reminder_id = 0,
+                                name = rem.name,
+                                repeat_time = rem.repeat_time,
+                                repeatable = rem.repeatable,
+                                start_time = nextRem,
+                                notification_time = rem.notification_time,
+                                notify = rem.notify
+                            )
+                        )
+                        val remaqXref = AquariumReminderCrossRef(aqID, remID)
+                        remVM.insertRelation(remaqXref)
+                    }
+                }
                 rem.completed = true
                 rem.completedOn = Calendar.getInstance().timeInMillis
                 remVM.updateReminder(rem)
@@ -88,6 +102,8 @@ class ReminderList : Fragment(), AdapterOptionsListener {
     }
 
     override fun deleteReminder(rem: Reminder) {
+        val wm = WorkManager.getInstance(requireContext())
+        wm.cancelUniqueWork(rem.reminder_id.toString())
         viewLifecycleOwner.lifecycleScope.launch {
             remVM.deleteRelation(rem.reminder_id)
             remVM.deleteReminder(rem.reminder_id)
@@ -126,7 +142,11 @@ class ReminderListAdapter internal constructor(
         holder.remNameCheck.isChecked = current.completed
         if (!current.completed) {
             holder.remDate.text = "Due at " + current.nextReminderStr()
-            holder.remTime.text = " " + longtoTimeStr(current.notification_time)
+            if (current.notification_time != null) {
+                holder.remTime.text = " " + longtoTimeStr(current.notification_time)
+            } else {
+                holder.remTime.text = ""
+            }
         } else {
             holder.remDate.text =
                 "Completed on " + DateFormat.getDateInstance().format(current.completedOn)
@@ -140,11 +160,6 @@ class ReminderListAdapter internal constructor(
         }
 
         holder.remNameCheck.setOnClickListener {
-//            val remCompleteDialog = ReminderCompleteDialog(context, this, current)
-//            remCompleteDialog.show()
-//            remCompleteDialog.setOnCancelListener {
-//                holder.remNameCheck.isChecked = false
-//            }
             if (holder.remNameCheck.isChecked) {
                 listener.markReminderCompleted(current)
             } else {
@@ -164,7 +179,6 @@ class ReminderListAdapter internal constructor(
 
     override fun onDeleteConfirmation(pos: Int) {
         listener.deleteReminder(reminders[pos])
-        Log.i("ReminderList", "delete " + reminders[pos].name)
     }
 
     override fun onEditConfirmation(pos: Int) {

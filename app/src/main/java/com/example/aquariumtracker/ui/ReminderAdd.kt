@@ -2,15 +2,20 @@ package com.example.aquariumtracker.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.work.*
+import com.example.aquariumtracker.NotifyWorker
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.AquariumReminderCrossRef
 import com.example.aquariumtracker.database.model.Reminder
@@ -20,6 +25,9 @@ import com.example.aquariumtracker.ui.viewmodel.ReminderViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ReminderAdd: Fragment() {
     private lateinit var calVM: CalendarViewModel
@@ -65,7 +73,8 @@ class ReminderAdd: Fragment() {
         date.text = calVM.getDateStr()
 
         dateSetButton.setOnClickListener {
-            val tpd = DatePickerDialog(this.requireContext(),
+            val dpd = DatePickerDialog(
+                this.requireContext(),
                 { _, yr, mon, day ->
                     calVM.set(yr, mon, day)
                     date.text = calVM.getDateStr()
@@ -74,7 +83,7 @@ class ReminderAdd: Fragment() {
                 calVM.getMon(),
                 calVM.getDay()
             )
-            tpd.show()
+            dpd.show()
         }
 
         val time = view.findViewById<TextView>(R.id.notification_time)
@@ -92,7 +101,6 @@ class ReminderAdd: Fragment() {
                 false
             )
             tpd.show()
-
         }
     }
 
@@ -109,8 +117,8 @@ class ReminderAdd: Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun saveReminder(view: View) {
-
         val repeatable = view.findViewById<Switch>(R.id.repeat_switch)?.isChecked
         val repeatTime = view.findViewById<EditText>(R.id.repeat_period)?.text.toString()
         val repeatCycle = view.findViewById<Spinner>(R.id.repeat_cycle)?.selectedItemId
@@ -119,13 +127,25 @@ class ReminderAdd: Fragment() {
         val reminderName = view.findViewById<EditText>(R.id.rem_name)?.text.toString()
         val startDate = calVM.getTimeinMillis()
 
+        val validRepeat = if (repeatable != null) {
+            !repeatable || (repeatable && validRepeatPeriod(repeatTime))
+        } else {
+            null
+        }
+
         if (repeatable != null &&
             notification != null &&
             validReminderName(reminderName) &&
-            validRepeatPeriod(repeatTime)) {
-            val rem = Reminder(reminder_id = 0, name = reminderName, repeatable = repeatable,
-                repeat_time = repeatTime.toInt(), start_time = startDate, notify = notification,
-                notification_time = notificationTime
+            validRepeat == true
+        ) {
+
+            val repeatTimeFinal = if (repeatable) repeatTime.toLong() else null
+            val notifTimeFinal = if (notification) notificationTime else null
+
+            val rem = Reminder(
+                reminder_id = 0, name = reminderName, repeatable = repeatable,
+                repeat_time = repeatTimeFinal, start_time = startDate, notify = notification,
+                notification_time = notifTimeFinal
             )
 
             lifecycleScope.launch {
@@ -135,8 +155,48 @@ class ReminderAdd: Fragment() {
                     reminderVM.insertRelation(remaqXref)
                     Log.i("ReminderAdd", remaqXref.toString())
                 })
-            }
 
+                if (notification) {
+                    val constraints = Constraints.Builder()
+                        .setRequiresBatteryNotLow(false)
+                        .setRequiresCharging(false)
+                        .build()
+                    if (repeatable) {
+                        val interval = when (repeatCycle) {
+                            0L -> repeatTime.toLong()
+                            1L -> 7 * repeatTime.toLong()
+                            else -> -1
+                        }
+                        val perWorkRequest = PeriodicWorkRequestBuilder<NotifyWorker>(
+                            interval,
+                            TimeUnit.DAYS,
+                            PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS,
+                            TimeUnit.MILLISECONDS
+                        )
+                            .addTag(remID.toString())
+                            .setConstraints(constraints)
+                            .build()
+                        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+                            remID.toString(),
+                            ExistingPeriodicWorkPolicy.REPLACE,
+                            perWorkRequest
+                        )
+
+                    } else {
+                        val oneTimeWorkRequest = OneTimeWorkRequestBuilder<NotifyWorker>()
+                            .addTag(remID.toString())
+                            .setConstraints(constraints)
+                            .setInitialDelay(Duration.ofMillis(calVM.getTimeinMillis() - Calendar.getInstance().timeInMillis))
+                            .build()
+                        WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+                            remID.toString(),
+                            ExistingWorkPolicy.REPLACE,
+                            oneTimeWorkRequest
+                        )
+                    }
+                }
+                findNavController().navigate(R.id.action_reminderAdd_to_aquariumFragment)
+            }
         } else {
             val snack = Snackbar.make(view, getString(R.string.rem_input_error), LENGTH_LONG)
             snack.show()
@@ -148,6 +208,7 @@ class ReminderAdd: Fragment() {
         inflater.inflate(R.menu.menu_save, menu)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
