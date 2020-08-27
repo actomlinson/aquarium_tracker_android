@@ -12,7 +12,6 @@ data class Measurement(
     @PrimaryKey(autoGenerate = true) val measure_id: Long,
     @ColumnInfo val param_id: Long,
     @ColumnInfo val value: Double?,
-    //@ColumnInfo val time: String,
     @ColumnInfo val time: Long
 )
 

@@ -9,6 +9,7 @@ import com.example.aquariumtracker.database.dao.*
 import com.example.aquariumtracker.database.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Database(entities = [
     Aquarium::class,
@@ -34,24 +35,36 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabase(database.aquariumDao(), database.parameterDao())
+                    populateDatabase(
+                        database.aquariumDao(),
+                        database.parameterDao(),
+                        database.measurementDao()
+                    )
                 }
             }
 
         }
 
-        suspend fun populateDatabase(aqDAO: AquariumDAO, parameterDAO: ParameterDAO) {
+        suspend fun populateDatabase(
+            aqDAO: AquariumDAO,
+            parameterDAO: ParameterDAO,
+            measurementDAO: MeasurementDAO
+        ) {
             aqDAO.deleteAll()
-            val aq0 = Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble())
+            val aq0 = Aquarium(0, "Marineland 5 Gallon Portrait", 5.toDouble())
             val aq0ID = aqDAO.insert(aq0)
-            createDefaultParametersForAquarium(aq0ID, parameterDAO)
-            val aq1 = Aquarium( aq_id = 0, nickname = "Betta Tank", size = 5.toDouble())
+            createDefaultParametersForAquarium(aq0ID, parameterDAO, measurementDAO)
+            val aq1 = Aquarium(aq_id = 0, nickname = "Betta Tank", size = 5.toDouble())
             val aq1ID = aqDAO.insert(aq1)
-            createDefaultParametersForAquarium(aq1ID, parameterDAO)
+            createDefaultParametersForAquarium(aq1ID, parameterDAO, measurementDAO)
 
         }
 
-        suspend fun createDefaultParametersForAquarium(aqID: Long, parameterDAO: ParameterDAO) {
+        suspend fun createDefaultParametersForAquarium(
+            aqID: Long,
+            parameterDAO: ParameterDAO,
+            measurementDAO: MeasurementDAO
+        ) {
             val paramDefaultNames = listOf<String>(
                 "Nitrate", "Nitrite", "Total Hardness (GH)",
                 "Chlorine", "Total Alkalinity (KH)", "pH"
@@ -61,11 +74,34 @@ abstract class AppDatabase : RoomDatabase() {
                 "(mg / L)", ""
             )
             val defaultParams = (paramDefaultNames.indices).map { i ->
-                Parameter( p_order = i, aq_id = aqID, name = paramDefaultNames[i],
+                Parameter(
+                    p_order = i, aq_id = aqID, name = paramDefaultNames[i],
                     units = paramDefaultUnits[i], param_id = 0
                 )
             }
-            parameterDAO.insertAll(defaultParams)
+            val paramIDs = parameterDAO.insertAll(defaultParams)
+
+            val measurements = listOf(
+                listOf(5.0, 10.0, 5.0, 10.0, 15.0),
+                listOf(0.0, 0.1, 0.2, 0.0, 0.2),
+                listOf(300.0, 250.0, 300.0, 300.0, 300.0),
+                listOf(0.0, 0.0, 0.0, 0.0, 0.0),
+                listOf(90.0, 100.0, 95.0, 85.0, 85.0),
+                listOf(7.8, 7.8, 7.9, 7.9, 8.0)
+            )
+            val cal = Calendar.getInstance()
+            for (i in paramIDs.indices) {
+                for (m in measurements[i]) {
+                    val measure = Measurement(
+                        measure_id = 0,
+                        param_id = paramIDs[i],
+                        value = m,
+                        time = cal.timeInMillis
+                    )
+                    measurementDAO.insert(measure)
+                }
+                cal.add(Calendar.DAY_OF_MONTH, 1)
+            }
         }
     }
 
@@ -76,7 +112,6 @@ abstract class AppDatabase : RoomDatabase() {
         fun getDatabase(): AppDatabase? {
             return INSTANCE
         }
-
 
         fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
             val tempInstance = INSTANCE
