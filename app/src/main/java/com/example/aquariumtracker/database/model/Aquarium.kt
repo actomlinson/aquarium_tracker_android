@@ -29,7 +29,7 @@ data class AquariumWithImages(
         entityColumn = "aq_id"
     ) val images: List<Image>
 ) {
-    fun getRandomImage() : Image? {
+    fun getRandomImage(): Image? {
         return if (images.isNotEmpty()) {
             val index = floor((Math.random() * images.size))
             images[index.toInt()]
@@ -38,3 +38,12 @@ data class AquariumWithImages(
         }
     }
 }
+
+data class AquariumWithMeasurements(
+    @Embedded val aquarium: Aquarium,
+    @Relation(
+        entity = MeasurementSet::class,
+        parentColumn = "aq_id",
+        entityColumn = "aq_id"
+    ) val measurementSets: List<MeasurementsByDate>
+)

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.AlarmClock
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.TextView
@@ -12,14 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.Measurement
+import com.example.aquariumtracker.database.model.MeasurementSet
 import com.example.aquariumtracker.database.model.Parameter
 import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.MeasurementViewModel
 import com.example.aquariumtracker.ui.viewmodel.ParameterViewModel
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -78,21 +80,27 @@ class AddMeasurement : Fragment() {
     private fun saveMeasurements() {
         val cal = Calendar.getInstance()
         val time = cal.timeInMillis
-
-        for (c in 0 until viewAdapter.itemCount) {
-            val entry = viewAdapter.texts[c]
-            val entryDouble = try {
-                entry?.text.toString().toDouble()
-            } catch (e: NumberFormatException) {
-                null
+        aqSelector.selected.observe(viewLifecycleOwner, Observer { aqID ->
+            val mSet = MeasurementSet(mset_id = 0, aq_id = aqID, time = time)
+            lifecycleScope.launch {
+                val msetID = measureViewModel.insert(mSet)
+                for (c in 0 until viewAdapter.itemCount) {
+                    val entry = viewAdapter.texts[c]
+                    val entryDouble = try {
+                        entry?.text.toString().toDouble()
+                    } catch (e: NumberFormatException) {
+                        null
+                    }
+                    val pID = viewAdapter.parameters[c].param_id
+                    measureViewModel.insert(
+                        Measurement(
+                            measure_id = 0, param_id = pID, mset_id = msetID, aq_id = aqID,
+                            value = entryDouble, time = time
+                        )
+                    )
+                }
             }
-            val pID = viewAdapter.parameters[c].param_id
-            measureViewModel.insert(Measurement(
-                measure_id = 0, param_id = pID, value = entryDouble,
-                time = time)
-            )
-            Log.i("AddMeasurement", time.toString())
-        }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

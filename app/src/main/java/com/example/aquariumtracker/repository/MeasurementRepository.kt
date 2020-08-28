@@ -1,9 +1,11 @@
 package com.example.aquariumtracker.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.example.aquariumtracker.api.getNetworkService
 import com.example.aquariumtracker.database.dao.MeasurementDAO
 import com.example.aquariumtracker.database.model.Measurement
+import com.example.aquariumtracker.database.model.MeasurementSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -36,4 +38,10 @@ class MeasurementRepository(private val measurementDAO: MeasurementDAO) {
         measurementDAO.insertAll(ms)
     }
 
+    suspend fun insert(mset: MeasurementSet): Long = measurementDAO.insert(mset)
+
+
+    fun getMeasurementTimes(): LiveData<Long> = measurementDAO.getMeasurementTimes()
+    fun getMeasurementsAtTime(time: Long): LiveData<List<Measurement>> =
+        measurementDAO.getMeasurementsAtTime(time)
 }

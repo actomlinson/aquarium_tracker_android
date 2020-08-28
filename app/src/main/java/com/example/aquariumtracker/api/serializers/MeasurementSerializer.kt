@@ -33,6 +33,13 @@ class MeasurementDeserializer : JsonDeserializer<Measurement> {
         typeOfT: Type?,
         context: JsonDeserializationContext?
     ): Measurement {
-        return Measurement(measure_id = 0, param_id = 0, value = 0.0, time = 0)
+        return Measurement(
+            measure_id = 0,
+            param_id = 0,
+            aq_id = 0,
+            mset_id = 0,
+            value = 0.0,
+            time = 0
+        )
     }
 }

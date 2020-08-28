@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.aquariumtracker.database.model.Aquarium
 import com.example.aquariumtracker.database.model.AquariumWithImages
+import com.example.aquariumtracker.database.model.AquariumWithMeasurements
 
 @Dao
 interface AquariumDAO {
@@ -36,4 +37,8 @@ interface AquariumDAO {
     @Transaction
     @Query("SELECT * FROM aquarium_table")
     fun getAquariumsWithImages(): LiveData<List<AquariumWithImages>>
+
+    @Transaction
+    @Query("SELECT * FROM aquarium_table WHERE aq_id = :aqID")
+    fun getAquariumWithMeasurements(aqID: Long): LiveData<AquariumWithMeasurements>
 }

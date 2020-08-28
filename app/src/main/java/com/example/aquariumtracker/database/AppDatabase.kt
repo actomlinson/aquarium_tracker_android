@@ -10,15 +10,19 @@ import com.example.aquariumtracker.database.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
-@Database(entities = [
-    Aquarium::class,
-    Parameter::class,
-    Measurement::class,
-    Reminder::class,
-    AquariumReminderCrossRef::class,
-    Image::class
-], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        Aquarium::class,
+        Parameter::class,
+        Measurement::class,
+        MeasurementSet::class,
+        Reminder::class,
+        AquariumReminderCrossRef::class,
+        Image::class
+    ], version = 1, exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun aquariumDao(): AquariumDAO
@@ -90,17 +94,31 @@ abstract class AppDatabase : RoomDatabase() {
                 listOf(7.8, 7.8, 7.9, 7.9, 8.0)
             )
             val cal = Calendar.getInstance()
+
+            val times = ArrayList<Long>()
+            for (i in measurements[0].indices) {
+                times.add(cal.timeInMillis)
+                cal.add(Calendar.DAY_OF_MONTH, 1)
+            }
+
+            val msets = ArrayList<Long>()
+            for (i in measurements[0].indices) {
+                val mset = MeasurementSet(mset_id = 0, aq_id = aqID, time = times[i])
+                msets.add(measurementDAO.insert(mset))
+            }
+
             for (i in paramIDs.indices) {
-                for (m in measurements[i]) {
+                measurements[i].forEachIndexed { j, m ->
                     val measure = Measurement(
                         measure_id = 0,
                         param_id = paramIDs[i],
+                        mset_id = msets[j],
+                        aq_id = aqID,
                         value = m,
-                        time = cal.timeInMillis
+                        time = times[j]
                     )
                     measurementDAO.insert(measure)
                 }
-                cal.add(Calendar.DAY_OF_MONTH, 1)
             }
         }
     }
