@@ -8,6 +8,7 @@ import com.example.aquariumtracker.api.ApiWorker
 import com.example.aquariumtracker.api.getNetworkService
 import com.example.aquariumtracker.database.dao.AquariumDAO
 import com.example.aquariumtracker.database.model.Aquarium
+import com.example.aquariumtracker.database.model.AquariumWithMeasurements
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -40,10 +41,14 @@ class AquariumRepository(private val context: Context, private val aquariumDAO: 
 
     fun getAquariumsWithImages() = aquariumDAO.getAquariumsWithImages()
 
+    fun getAquariumWithMeasurements(aqID: Long): LiveData<AquariumWithMeasurements> =
+        aquariumDAO.getAquariumWithMeasurements(aqID)
+
     suspend fun insert(aq: Aquarium): Long {
         val aqID = aquariumDAO.insert(aq)
         WorkManager.getInstance(context).enqueue(
-            ApiWorker.getWorkRequest(aqID, "INSERT", "AQUARIUM"))
+            ApiWorker.getWorkRequest(aqID, "INSERT", "AQUARIUM")
+        )
         return aqID
     }
 
