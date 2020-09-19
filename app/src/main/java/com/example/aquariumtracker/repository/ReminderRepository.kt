@@ -24,4 +24,7 @@ class ReminderRepository(private val reminderDAO: ReminderDAO) {
         reminderDAO.insertRelation(remaqXref)
     }
 
+    suspend fun deleteReminder(remID: Long) = reminderDAO.deleteReminder(remID)
+    suspend fun deleteRelation(remID: Long) = reminderDAO.deleteRelation(remID)
+    suspend fun updateReminder(rem: Reminder) = reminderDAO.updateReminder(rem)
 }

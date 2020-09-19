@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.aquariumtracker.database.AppDatabase
 import com.example.aquariumtracker.database.model.Aquarium
+import com.example.aquariumtracker.database.model.AquariumWithMeasurements
 import com.example.aquariumtracker.repository.AquariumRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,7 +19,7 @@ class AquariumViewModel(application: Application) : AndroidViewModel(application
 
     init {
         val aquariumDAO = AppDatabase.getDatabase(application, viewModelScope).aquariumDao()
-        repository = AquariumRepository(aquariumDAO)
+        repository = AquariumRepository(application, aquariumDAO)
         allAquariums = repository.allAquariums
     }
 
@@ -39,4 +40,10 @@ class AquariumViewModel(application: Application) : AndroidViewModel(application
             repository.deleteAquarium(aqID)
         }
     }
+
+    fun getAquariumWithImages(aqID: Long) = repository.getAquariumWithImages(aqID)
+    fun getAquariumsWithImages() = repository.getAquariumsWithImages()
+    fun getAquariumWithMeasurements(aqID: Long): LiveData<AquariumWithMeasurements> =
+        repository.getAquariumWithMeasurements(aqID)
+
 }

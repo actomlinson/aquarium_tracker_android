@@ -5,24 +5,31 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.aquariumtracker.database.dao.AquariumDAO
-import com.example.aquariumtracker.database.dao.MeasurementDAO
-import com.example.aquariumtracker.database.dao.ParameterDAO
-import com.example.aquariumtracker.database.dao.ReminderDAO
+import com.example.aquariumtracker.database.dao.*
 import com.example.aquariumtracker.database.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
-@Database(entities = [
-    Aquarium::class, Parameter::class, Measurement::class, Reminder::class, AquariumReminderCrossRef::class
-], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        Aquarium::class,
+        Parameter::class,
+        Measurement::class,
+        MeasurementSet::class,
+        Reminder::class,
+        AquariumReminderCrossRef::class,
+        Image::class
+    ], version = 1, exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun aquariumDao(): AquariumDAO
     abstract fun parameterDao(): ParameterDAO
     abstract fun measurementDao(): MeasurementDAO
     abstract fun reminderDao(): ReminderDAO
-
+    abstract fun imageDao(): ImageDAO
 
     private class AppDatabaseCallback(
         private val scope: CoroutineScope
@@ -32,24 +39,36 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabase(database.aquariumDao(), database.parameterDao())
+                    populateDatabase(
+                        database.aquariumDao(),
+                        database.parameterDao(),
+                        database.measurementDao()
+                    )
                 }
             }
 
         }
 
-        suspend fun populateDatabase(aqDAO: AquariumDAO, parameterDAO: ParameterDAO) {
+        suspend fun populateDatabase(
+            aqDAO: AquariumDAO,
+            parameterDAO: ParameterDAO,
+            measurementDAO: MeasurementDAO
+        ) {
             aqDAO.deleteAll()
-            val aq0 = Aquarium(0,"Marineland 5 Gallon Portrait", 5.toDouble())
+            val aq0 = Aquarium(0, "Marineland 5 Gallon Portrait", 5.toDouble())
             val aq0ID = aqDAO.insert(aq0)
-            createDefaultParametersForAquarium(aq0ID, parameterDAO)
-            val aq1 = Aquarium( aq_id = 0, nickname = "Betta Tank", size = 5.toDouble())
+            createDefaultParametersForAquarium(aq0ID, parameterDAO, measurementDAO)
+            val aq1 = Aquarium(aq_id = 0, nickname = "Betta Tank", size = 5.toDouble())
             val aq1ID = aqDAO.insert(aq1)
-            createDefaultParametersForAquarium(aq1ID, parameterDAO)
+            createDefaultParametersForAquarium(aq1ID, parameterDAO, measurementDAO)
 
         }
 
-        suspend fun createDefaultParametersForAquarium(aqID: Long, parameterDAO: ParameterDAO) {
+        suspend fun createDefaultParametersForAquarium(
+            aqID: Long,
+            parameterDAO: ParameterDAO,
+            measurementDAO: MeasurementDAO
+        ) {
             val paramDefaultNames = listOf<String>(
                 "Nitrate", "Nitrite", "Total Hardness (GH)",
                 "Chlorine", "Total Alkalinity (KH)", "pH"
@@ -59,17 +78,58 @@ abstract class AppDatabase : RoomDatabase() {
                 "(mg / L)", ""
             )
             val defaultParams = (paramDefaultNames.indices).map { i ->
-                Parameter( p_order = i, aq_id = aqID, name = paramDefaultNames[i],
+                Parameter(
+                    p_order = i, aq_id = aqID, name = paramDefaultNames[i],
                     units = paramDefaultUnits[i], param_id = 0
                 )
             }
-            parameterDAO.insertAll(defaultParams)
+            val paramIDs = parameterDAO.insertAll(defaultParams)
+
+            val measurements = listOf(
+                listOf(5.0, 10.0, 5.0, 10.0, 15.0),
+                listOf(0.0, 0.1, 0.2, 0.0, 0.2),
+                listOf(300.0, 250.0, 300.0, 300.0, 300.0),
+                listOf(0.0, 0.0, 0.0, 0.0, 0.0),
+                listOf(90.0, 100.0, 95.0, 85.0, 85.0),
+                listOf(7.8, 7.8, 7.9, 7.9, 8.0)
+            )
+            val cal = Calendar.getInstance()
+
+            val times = ArrayList<Long>()
+            for (i in measurements[0].indices) {
+                times.add(cal.timeInMillis)
+                cal.add(Calendar.DAY_OF_MONTH, 1)
+            }
+
+            val msets = ArrayList<Long>()
+            for (i in measurements[0].indices) {
+                val mset = MeasurementSet(mset_id = 0, aq_id = aqID, time = times[i])
+                msets.add(measurementDAO.insert(mset))
+            }
+
+            for (i in paramIDs.indices) {
+                measurements[i].forEachIndexed { j, m ->
+                    val measure = Measurement(
+                        measure_id = 0,
+                        param_id = paramIDs[i],
+                        mset_id = msets[j],
+                        aq_id = aqID,
+                        value = m,
+                        time = times[j]
+                    )
+                    measurementDAO.insert(measure)
+                }
+            }
         }
     }
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
+
+        fun getDatabase(): AppDatabase? {
+            return INSTANCE
+        }
 
         fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
             val tempInstance = INSTANCE

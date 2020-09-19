@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Button
 import com.example.aquariumtracker.R
 
-class AquariumDeleteDialog(context: Context, fragment: AquariumFragment) : Dialog(context) {
+class AquariumDeleteDialog(context: Context, fragment: AquariumDetail) : Dialog(context) {
     private var numClicked = 5
     private val view: View = layoutInflater.inflate(R.layout.dialog_delete, null)
     private val delButton: Button = view.findViewById(R.id.del_button)

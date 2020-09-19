@@ -65,9 +65,9 @@ class MeasurementListAdapter internal constructor(
 ) : RecyclerView.Adapter<MeasurementListAdapter.MeasurementViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var parametersWithMeaurements = emptyList<ParameterWithMeasurements>()
+    private var parametersWithMeasurements = emptyList<ParameterWithMeasurements>()
 
-    inner class MeasurementViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MeasurementViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val measure1: TextView = itemView.findViewById(R.id.measure1)
         val measure2: TextView = itemView.findViewById(R.id.measure2)
         val paramNameTextView: TextView = itemView.findViewById(R.id.param_name)
@@ -79,21 +79,21 @@ class MeasurementListAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: MeasurementViewHolder, position: Int) {
-        val current = parametersWithMeaurements[position]
+        val current = parametersWithMeasurements[position]
         val currentm = current.getSortedMeasurements()
-        holder.paramNameTextView.text = current.param.aq_id.toString() //.name
+        holder.paramNameTextView.text = current.param.name
         Log.i("",current.getSortedMeasurements().toString())
-        holder.measure1.text = if (currentm.size > 0) currentm[0].value.toString() else "-"
-        holder.measure2.text = if (currentm.size > 1) currentm[1].value.toString() else "-"
+        holder.measure2.text = if (currentm.size > 0) currentm[0].value.toString() else "-"
+        holder.measure1.text = if (currentm.size > 1) currentm[1].value.toString() else "-"
     }
 
     internal fun setParametersWithMeasurements(params: List<ParameterWithMeasurements>) {
         Log.i("param list fetched", params.last().toString())
-        this.parametersWithMeaurements = params
+        this.parametersWithMeasurements = params
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        return parametersWithMeaurements.size
+        return parametersWithMeasurements.size
     }
 }

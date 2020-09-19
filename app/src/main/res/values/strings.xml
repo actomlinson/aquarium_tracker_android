@@ -6,6 +6,7 @@
     <string name="action_add">Add</string>
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_edit">Edit</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -46,12 +47,23 @@
     <string name="notification">Notification</string>
     <string name="rem_input_error">Please double check inputs. Reminder was not saved.</string>
 
+    <string name="latest_pictures">Latest Pictures</string>
+    <string name="latest_parameter">Latest Parameters</string>
+    <string name="latest_reminders">Latest Reminders</string>
+    <string name="aquarium_size">Aquarium Size:</string>
+    <string name="start_date">Start Date:</string>
+    <string name="set">Set</string>
+    <string name="aquarium_photo_content_description">Aquarium Photo</string>
+    <string name="date">Date:</string>
+    <string name="time">Time:</string>
+    <string name="notes">Notes:</string>
+    <string name="import_images_from_gallery">Import images from gallery</string>
+    <string name="next_reminder">Next Reminder</string>
+
 
     <string-array name="time_choices">
         <item>Days</item>
         <item>Weeks</item>
-        <item>Months</item>
-        <item>Years</item>
     </string-array>
 
 
