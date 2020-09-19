@@ -13,7 +13,9 @@ import androidx.work.WorkerParameters
 class NotifyWorker(private val context: Context, workerParams: WorkerParameters): Worker(context, workerParams) {
 
     override fun doWork(): Result {
+        val notificationText = inputData.getString("NOTIF_TEXT") ?: return Result.failure()
         val notificationService = NotificationService(context)
+        notificationService.setNotificationText(notificationText)
         notificationService.showNotification(0)
         return Result.success()
     }
@@ -52,7 +54,13 @@ class NotificationService(private val context: Context) {
             // notificationId is a unique int for each notification that you must define
             notify(notificationId, builder.build())
         }
+    }
 
+    fun setNotificationText(text: String) {
+        builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_fish)
+            .setContentTitle(text)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
     }
 
 }
