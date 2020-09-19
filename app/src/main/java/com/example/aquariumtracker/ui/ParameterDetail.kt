@@ -75,7 +75,13 @@ class ParameterDetail : Fragment() {
                 })
             paramViewModel.getParametersWithMeasurements(aqID)
                 .observe(viewLifecycleOwner, Observer {
-                    makeGraph(it, chart)
+                    val data = it.firstOrNull()?.measurements?.isNotEmpty() ?: false
+                    if (data) {
+                        makeGraph(it, chart)
+                    } else {
+                        chart.visibility = ViewGroup.GONE
+                        titleRow.visibility = ViewGroup.GONE
+                    }
                 })
         })
     }

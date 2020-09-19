@@ -208,7 +208,7 @@ class ReminderAdd: Fragment() {
                         )
                     }
                 }
-                findNavController().navigate(R.id.action_reminderAdd_to_aquariumFragment)
+                findNavController().navigateUp()
             }
         } else {
             val snack = Snackbar.make(view, getString(R.string.rem_input_error), LENGTH_LONG)
