@@ -8,12 +8,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/latest_pictures" />
+            android:text="@string/next_reminder"
+            android:textAppearance="@style/TextAppearance.Shrine.Toolbar" />
+
+        <fragment
+            android:id="@+id/fragment3"
+            android:name="com.example.aquariumtracker.ui.NextReminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/double_padding" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/latest_pictures"
+            android:textAppearance="@style/TextAppearance.Shrine.Toolbar" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment2"
@@ -25,7 +39,8 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/latest_parameter" />
+            android:text="@string/latest_parameter"
+            android:textAppearance="@style/TextAppearance.Shrine.Toolbar" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment"

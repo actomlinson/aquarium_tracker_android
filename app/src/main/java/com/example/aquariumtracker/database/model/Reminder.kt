@@ -53,7 +53,11 @@ data class AquariumWithReminders(
         associateBy = Junction(AquariumReminderCrossRef::class)
     )
     val reminders: List<Reminder>
-)
+) {
+    fun getNextReminder(): Reminder? {
+        return reminders.sortedBy { it.start_time }.filter { !it.completed }.getOrNull(0)
+    }
+}
 
 data class ReminderList(
     @PrimaryKey(autoGenerate = false) @ColumnInfo (name = "r_id") val r_id: Int,
