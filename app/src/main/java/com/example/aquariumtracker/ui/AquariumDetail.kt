@@ -30,7 +30,7 @@ import java.util.*
 
 class AquariumDetail : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
 
-    private val numTabs : Int = 5
+    private val numTabs: Int = 4
     private val aqSelector: AquariumSelector by activityViewModels()
     private lateinit var aqViewModel: AquariumViewModel
     private val imageViewModel: ImageViewModel by activityViewModels()
@@ -61,17 +61,21 @@ class AquariumDetail : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
             tab.icon = tabLayout.getTabAt(position)?.icon
         }.attach()
 
-        val tabTextTable = listOf(getString(R.string.aquarium_view_overview),
-                                  getString(R.string.menu_gallery),
-                                  getString(R.string.aquarium_view_params),
-                                  getString(R.string.aquarium_view_livestock),
-                                  getString(R.string.aquarium_view_reminder))
+        val tabTextTable = listOf(
+            getString(R.string.aquarium_view_overview),
+            getString(R.string.menu_gallery),
+            getString(R.string.aquarium_view_params),
+            //getString(R.string.aquarium_view_livestock),
+            getString(R.string.aquarium_view_reminder)
+        )
 
-        val tabIconTable = listOf(ResourcesCompat.getDrawable(resources, R.drawable.ic_wave, null),
-                                  ResourcesCompat.getDrawable(resources, R.drawable.ic_camera, null),
-                                  ResourcesCompat.getDrawable(resources, R.drawable.ic_chart, null),
-                                  ResourcesCompat.getDrawable(resources, R.drawable.ic_fish, null),
-                                  ResourcesCompat.getDrawable(resources, R.drawable.ic_calendar, null))
+        val tabIconTable = listOf(
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_wave, null),
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_camera, null),
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_chart, null),
+            //ResourcesCompat.getDrawable(resources, R.drawable.ic_fish, null),
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_calendar, null)
+        )
 
         tabLayout.getTabAt(0)?.text = tabTextTable[0]
         for (x in 0 until numTabs) {
@@ -93,6 +97,7 @@ class AquariumDetail : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_add, menu)
         inflater.inflate(R.menu.menu_delete, menu)
+        inflater.inflate(R.menu.menu_gallery, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -108,8 +113,8 @@ class AquariumDetail : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
                     0 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
                     1 -> dispatchTakePictureIntent()//getImagesFromGallery()
                     2 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
-                    3 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
-                    4 -> navController.navigate(R.id.action_aquariumFragment_to_reminderAdd)
+                    //4 -> navController.navigate(R.id.action_aquariumFragment_to_addMeasurement)
+                    3 -> navController.navigate(R.id.action_aquariumFragment_to_reminderAdd)
                     else -> super.onOptionsItemSelected(item)
                 }
 
@@ -122,9 +127,10 @@ class AquariumDetail : Fragment(), AquariumDeleteDialog.DeleteDialogListener {
                 }
                 return true
             }
-//            R.id.action_settings -> {
-//
-//            }
+            R.id.action_gallery -> {
+                getImagesFromGallery()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -217,7 +223,7 @@ class DemoCollectionAdapter(fragment: Fragment, numTabs: Int) : FragmentStateAda
         return when (position) {
             1 -> GalleryDetail()
             2 -> ParameterDetail()
-            4 -> ReminderList()
+            3 -> ReminderList()
             else -> AquariumOverview()
         }
 
