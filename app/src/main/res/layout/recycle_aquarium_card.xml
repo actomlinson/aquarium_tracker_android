@@ -29,17 +29,6 @@
 
         <TextView
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/aq_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textSize="20sp"
-            tools:context=".ui.GalleryFragment" />
-
-        <TextView
-            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/aq_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

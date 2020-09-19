@@ -57,6 +57,8 @@
     <string name="date">Date:</string>
     <string name="time">Time:</string>
     <string name="notes">Notes:</string>
+    <string name="import_images_from_gallery">Import images from gallery</string>
+    <string name="next_reminder">Next Reminder</string>
 
 
     <string-array name="time_choices">

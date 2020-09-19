@@ -24,6 +24,8 @@ import com.example.aquariumtracker.ui.viewmodel.AquariumSelector
 import com.example.aquariumtracker.ui.viewmodel.AquariumViewModel
 import com.example.aquariumtracker.ui.viewmodel.ImageViewModel
 import com.example.aquariumtracker.ui.viewmodel.ParameterViewModel
+import java.text.DateFormat
+import java.util.*
 
 
 class AquariumList : Fragment() {
@@ -108,7 +110,8 @@ class AquariumListAdapter internal constructor(
         val aqImage: ImageView = itemView.findViewById(R.id.aq_image)
         val aqCard: CardView = itemView.findViewById(R.id.aq_list_card)
         val aqNameTextView: TextView = itemView.findViewById(R.id.aq_name)
-        val aqNumTextView: TextView = itemView.findViewById(R.id.aq_num)
+
+        //        val aqNumTextView: TextView = itemView.findViewById(R.id.aq_num)
         val aqDateTextView: TextView = itemView.findViewById(R.id.aq_date)
     }
 
@@ -129,16 +132,18 @@ class AquariumListAdapter internal constructor(
                 .into(holder.aqImage)
         }
         holder.aqNameTextView.text = current.aquarium.nickname
-        holder.aqNumTextView.text = current.aquarium.aq_id.toString()
+//        holder.aqNumTextView.text = current.aquarium.aq_id.toString()
 //        val date = Calendar.getInstance().apply { timeInMillis = current.startDate }
 //        val date = Calendar.getInstance().apply { current.startDateStr }
-
-        holder.aqDateTextView.text = current.aquarium.startDate.toString()
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = current.aquarium.startDate
+        holder.aqDateTextView.text = "Started on " + DateFormat.getDateInstance().format(cal.time)
 
         holder.aqCard.setOnClickListener {
             aqSelector.select(current.aquarium.aq_id)
             val navController = it.findNavController()
-            navController.navigate(R.id.action_nav_aquarium_list_to_aquariumFragment,
+            navController.navigate(
+                R.id.action_nav_aquarium_list_to_aquariumFragment,
                 bundleOf("aq_name" to current.aquarium.nickname)
             )
         }

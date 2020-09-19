@@ -141,7 +141,7 @@ class ReminderListAdapter internal constructor(
         holder.remNameCheck.text = current.name
         holder.remNameCheck.isChecked = current.completed
         if (!current.completed) {
-            holder.remDate.text = "Due at " + current.nextReminderStr()
+            holder.remDate.text = "Due on " + current.nextReminderStr()
             if (current.notification_time != null) {
                 holder.remTime.text = " " + longtoTimeStr(current.notification_time)
             } else {
