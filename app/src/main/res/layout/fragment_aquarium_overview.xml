@@ -16,6 +16,12 @@
             android:text="@string/next_reminder"
             android:textAppearance="@style/TextAppearance.Shrine.Toolbar" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_margin="4dp" />
+
         <fragment
             android:id="@+id/fragment3"
             android:name="com.example.aquariumtracker.ui.NextReminder"
@@ -29,6 +35,12 @@
             android:text="@string/latest_pictures"
             android:textAppearance="@style/TextAppearance.Shrine.Toolbar" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_margin="4dp" />
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment2"
             android:name="com.example.aquariumtracker.ui.GallerySmallDetail"
@@ -41,6 +53,12 @@
             android:layout_height="wrap_content"
             android:text="@string/latest_parameter"
             android:textAppearance="@style/TextAppearance.Shrine.Toolbar" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_margin="4dp" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment"
