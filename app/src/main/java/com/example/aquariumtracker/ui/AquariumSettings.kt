@@ -64,18 +64,18 @@ class AquariumSettings : Fragment() {
     }
 
     private fun saveAquarium() {
-        val aq = Aquarium(aq_id = 0, nickname = aqNameInput.text.toString(),
+        val aq = Aquarium(
+            aq_id = 0, nickname = aqNameInput.text.toString(),
             size = aqSizeInput.text.toString().toDouble(),
-            startDate = aqDateInput.date) //, startDateStr = aqDateInput.date.toString())
+            startDate = calVM.getTimeinMillis()
+        )
 
         lifecycleScope.launch {
             val newAqID = aqViewModel.insert(aq)
             paramViewModel.createDefaultParametersForAquarium(newAqID)
+            findNavController().navigateUp()
+
         }
-//        newAqID.observe(viewLifecycleOwner, Observer {
-//            paramViewModel.createDefaultParametersForAquarium(it.toInt())
-//        })
-        findNavController().navigate(R.id.action_aquariumSettings_to_nav_aquarium_list)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

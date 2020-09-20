@@ -19,8 +19,9 @@
         <item name="titleTextAppearance">@style/TextAppearance.Shrine.Toolbar</item>
     </style>
 
-    <style name="TextAppearance.Shrine.Toolbar" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:textSize">16sp</item>
+    <style name="TextAppearance.Shrine.Toolbar" parent="TextAppearance.MaterialComponents.Headline6">
+        <!--        <item name="android:textSize">16sp</item>-->
+        <!--        <item name="android:textStyle">bold</item>-->
     </style>
 
     <!--    <style name="Widget.App.Header" parent="Widget.AppCompat.">-->

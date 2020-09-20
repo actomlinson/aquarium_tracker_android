@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/nav_aquarium_list">
+    app:startDestination="@id/nav_aquarium_list"
+    android:label="All aquariums">
 
     <fragment
         android:id="@+id/nav_aquarium_list"
         android:name="com.example.aquariumtracker.ui.AquariumList"
-        android:label="fragment_aquarium_list">
+        android:label="All aquariums">
 
         <action
             android:id="@+id/action_nav_aquarium_list_to_aquariumFragment"
@@ -21,8 +22,8 @@
     <fragment
         android:id="@+id/addMeasurement"
         android:name="com.example.aquariumtracker.ui.AddMeasurement"
-        android:label="add"
-        tools:layout="@layout/fragment_add_measurement" >
+        tools:layout="@layout/fragment_add_measurement"
+        android:label="Add new measurement">
         <action
             android:id="@+id/action_addMeasurement_to_aquariumFragment"
             app:destination="@id/aquariumFragment" />
@@ -30,7 +31,8 @@
     <fragment
         android:id="@+id/aquariumFragment"
         android:name="com.example.aquariumtracker.ui.AquariumDetail"
-        tools:layout="@layout/fragment_aquarium_detail" >
+        tools:layout="@layout/fragment_aquarium_detail"
+        android:label="Aquarium Detail">
 
         <action
             android:id="@+id/action_aquariumFragment_to_addMeasurement"
@@ -49,7 +51,7 @@
     <fragment
         android:id="@+id/aquariumSettings"
         android:name="com.example.aquariumtracker.ui.AquariumSettings"
-        android:label="AquariumSettings" >
+        android:label="Add new aquarium">
         <action
             android:id="@+id/action_aquariumSettings_to_nav_aquarium_list"
             app:destination="@id/nav_aquarium_list" />
@@ -57,7 +59,7 @@
     <fragment
         android:id="@+id/reminderAdd"
         android:name="com.example.aquariumtracker.ui.ReminderAdd"
-        android:label="ReminderAdd" >
+        android:label="Add new reminder">
         <action
             android:id="@+id/action_reminderAdd_to_aquariumFragment"
             app:destination="@id/aquariumFragment" />

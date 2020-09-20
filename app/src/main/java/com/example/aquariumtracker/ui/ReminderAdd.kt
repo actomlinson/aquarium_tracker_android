@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.*
+import com.example.aquariumtracker.NotificationService
 import com.example.aquariumtracker.NotifyWorker
 import com.example.aquariumtracker.R
 import com.example.aquariumtracker.database.model.AquariumReminderCrossRef
@@ -147,6 +148,8 @@ class ReminderAdd: Fragment() {
                 repeat_time = repeatTimeFinal, start_time = startDate, notify = notification,
                 notification_time = notifTimeFinal
             )
+            val notificationService = NotificationService(requireContext())
+            notificationService.setNotificationText(reminderName)
 
             lifecycleScope.launch {
                 val remID = reminderVM.insert(rem)
@@ -175,6 +178,11 @@ class ReminderAdd: Fragment() {
                         )
                             .addTag(remID.toString())
                             .setConstraints(constraints)
+                            .setInputData(
+                                workDataOf(
+                                    "NOTIF_TEXT" to reminderName
+                                )
+                            )
                             .build()
                         WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
                             remID.toString(),
@@ -187,6 +195,11 @@ class ReminderAdd: Fragment() {
                             .addTag(remID.toString())
                             .setConstraints(constraints)
                             .setInitialDelay(Duration.ofMillis(calVM.getTimeinMillis() - Calendar.getInstance().timeInMillis))
+                            .setInputData(
+                                workDataOf(
+                                    "NOTIF_TEXT" to reminderName
+                                )
+                            )
                             .build()
                         WorkManager.getInstance(requireContext()).enqueueUniqueWork(
                             remID.toString(),
@@ -195,7 +208,7 @@ class ReminderAdd: Fragment() {
                         )
                     }
                 }
-                findNavController().navigate(R.id.action_reminderAdd_to_aquariumFragment)
+                findNavController().navigateUp()
             }
         } else {
             val snack = Snackbar.make(view, getString(R.string.rem_input_error), LENGTH_LONG)
