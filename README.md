@@ -3,7 +3,7 @@ Thanks for checking out my project!
 
 # :tropical_fish: Features
 
-## List
+## Aquarium List
 ![](documentation/aquarium_tracker_doc_main.GIF)
 
 ## Photos
